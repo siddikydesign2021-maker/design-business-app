@@ -8,11 +8,35 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', sans-serif; background: #f4f6fb; color: #1a1a2e; }
-    .sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100vh; background: #1a1a2e; padding: 24px 0; }
-    .logo { color: #fff; font-size: 18px; font-weight: 700; padding: 0 24px 24px; border-bottom: 1px solid #2d2d4e; }
-    .nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 24px; color: #8888aa; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+
+    /* AUTH */
+    .auth-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); }
+    .auth-box { background: #fff; border-radius: 20px; padding: 40px; width: 400px; max-width: 95vw; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+    .auth-logo { text-align: center; margin-bottom: 28px; }
+    .auth-logo h1 { font-size: 22px; color: #1a1a2e; font-weight: 700; }
+    .auth-logo p { font-size: 13px; color: #888; margin-top: 4px; }
+    .auth-tabs { display: flex; gap: 0; margin-bottom: 24px; border: 1px solid #e8eaf0; border-radius: 10px; overflow: hidden; }
+    .auth-tab { flex: 1; padding: 10px; text-align: center; font-size: 14px; cursor: pointer; background: #f4f6fb; color: #888; font-weight: 500; transition: all 0.2s; }
+    .auth-tab.active { background: #4361ee; color: #fff; }
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; font-weight: 500; }
+    .form-group input { width: 100%; padding: 12px 14px; border: 1px solid #e8eaf0; border-radius: 10px; font-size: 14px; outline: none; transition: border 0.2s; }
+    .form-group input:focus { border-color: #4361ee; }
+    .auth-btn { width: 100%; padding: 12px; background: #4361ee; color: #fff; border: none; border-radius: 10px; font-size: 15px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: background 0.2s; }
+    .auth-btn:hover { background: #3451d1; }
+    .auth-msg { text-align: center; font-size: 13px; margin-top: 12px; padding: 10px; border-radius: 8px; display: none; }
+    .auth-msg.error { background: #fee2e2; color: #991b1b; display: block; }
+    .auth-msg.success { background: #d1fae5; color: #065f46; display: block; }
+
+    /* APP */
+    .app-wrap { display: none; }
+    .sidebar { position: fixed; left: 0; top: 0; width: 220px; height: 100vh; background: #1a1a2e; padding: 24px 0; z-index: 10; }
+    .logo { color: #fff; font-size: 16px; font-weight: 700; padding: 0 20px 20px; border-bottom: 1px solid #2d2d4e; }
+    .user-info { padding: 12px 20px; color: #8888aa; font-size: 12px; border-bottom: 1px solid #2d2d4e; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 12px 20px; color: #8888aa; cursor: pointer; font-size: 14px; transition: all 0.2s; }
     .nav-item:hover, .nav-item.active { background: #2d2d4e; color: #fff; }
-    .nav-item span { font-size: 18px; }
+    .logout-btn { position: absolute; bottom: 20px; left: 0; right: 0; margin: 0 16px; padding: 10px; background: #2d2d4e; color: #ff6b6b; border: none; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .logout-btn:hover { background: #3d3d5e; }
     .main { margin-left: 220px; padding: 32px; }
     .page { display: none; }
     .page.active { display: block; }
@@ -20,7 +44,7 @@
     .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 32px; }
     .stat-card { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #e8eaf0; }
     .stat-label { font-size: 13px; color: #888; margin-bottom: 8px; }
-    .stat-value { font-size: 28px; font-weight: 700; color: #1a1a2e; }
+    .stat-value { font-size: 28px; font-weight: 700; }
     .stat-card.blue .stat-value { color: #4361ee; }
     .stat-card.green .stat-value { color: #2ec4b6; }
     .stat-card.orange .stat-value { color: #f77f00; }
@@ -47,96 +71,346 @@
     .modal-overlay.open { display: flex; }
     .modal { background: #fff; border-radius: 16px; padding: 28px; width: 480px; max-width: 95vw; }
     .modal h2 { font-size: 18px; margin-bottom: 20px; }
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 6px; font-weight: 500; }
-    .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #e8eaf0; border-radius: 8px; font-size: 13px; outline: none; transition: border 0.2s; }
-    .form-group input:focus, .form-group select:focus { border-color: #4361ee; }
+    .modal .form-group input, .modal .form-group select, .modal .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #e8eaf0; border-radius: 8px; font-size: 13px; outline: none; }
+    .modal .form-group input:focus, .modal .form-group select:focus { border-color: #4361ee; }
     .modal-btns { display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px; }
     .btn-cancel { background: #f4f6fb; color: #555; }
     .empty { text-align: center; padding: 40px; color: #aaa; font-size: 14px; }
     @media (max-width: 768px) {
       .sidebar { width: 60px; }
-      .nav-item .label { display: none; }
-      .logo { display: none; }
+      .nav-item .label, .user-info, .logo { display: none; }
       .main { margin-left: 60px; padding: 16px; }
     }
   </style>
 </head>
 <body>
-<div class="sidebar">
-  <div class="logo">Design Manager</div>
-  <div class="nav-item active" onclick="showPage('dashboard',event)"><span>📊</span><span class="label">ড্যাশবোর্ড</span></div>
-  <div class="nav-item" onclick="showPage('clients',event)"><span>👥</span><span class="label">ক্লায়েন্ট</span></div>
-  <div class="nav-item" onclick="showPage('projects',event)"><span>📁</span><span class="label">প্রজেক্ট</span></div>
-  <div class="nav-item" onclick="showPage('tasks',event)"><span>✅</span><span class="label">টাস্ক</span></div>
-  <div class="nav-item" onclick="showPage('invoices',event)"><span>🧾</span><span class="label">ইনভয়েস</span></div>
-</div>
-<div class="main">
-  <div id="dashboard" class="page active">
-    <h1>ড্যাশবোর্ড</h1>
-    <div class="stats">
-      <div class="stat-card blue"><div class="stat-label">মোট ক্লায়েন্ট</div><div class="stat-value" id="s-clients">0</div></div>
-      <div class="stat-card green"><div class="stat-label">চলমান প্রজেক্ট</div><div class="stat-value" id="s-projects">0</div></div>
-      <div class="stat-card orange"><div class="stat-label">বাকি টাস্ক</div><div class="stat-value" id="s-tasks">0</div></div>
-      <div class="stat-card red"><div class="stat-label">বকেয়া পেমেন্ট</div><div class="stat-value" id="s-invoices">৳0</div></div>
+
+<!-- AUTH PAGE -->
+<div class="auth-wrap" id="auth-wrap">
+  <div class="auth-box">
+    <div class="auth-logo">
+      <h1>🎨 Design Manager</h1>
+      <p>আপনার ডিজাইন বিজনেস ম্যানেজ করুন</p>
     </div>
-  </div>
-  <div id="clients" class="page">
-    <h1>ক্লায়েন্ট</h1>
-    <div class="card">
-      <div class="card-header"><span class="card-title">সকল ক্লায়েন্ট</span><button class="btn btn-primary" onclick="openModal('client-modal')">+ নতুন ক্লায়েন্ট</button></div>
-      <table><thead><tr><th>নাম</th><th>ইমেইল</th><th>ফোন</th><th>একশন</th></tr></thead><tbody id="clients-table"></tbody></table>
+    <div class="auth-tabs">
+      <div class="auth-tab active" onclick="switchTab('login')">লগইন</div>
+      <div class="auth-tab" onclick="switchTab('signup')">সাইনআপ</div>
     </div>
-  </div>
-  <div id="projects" class="page">
-    <h1>প্রজেক্ট</h1>
-    <div class="card">
-      <div class="card-header"><span class="card-title">সকল প্রজেক্ট</span><button class="btn btn-primary" onclick="openModal('project-modal')">+ নতুন প্রজেক্ট</button></div>
-      <table><thead><tr><th>নাম</th><th>ক্লায়েন্ট</th><th>বাজেট</th><th>ডেডলাইন</th><th>স্ট্যাটাস</th><th>একশন</th></tr></thead><tbody id="projects-table"></tbody></table>
+    <div id="login-form">
+      <div class="form-group"><label>ইমেইল</label><input id="l-email" type="email" placeholder="আপনার ইমেইল"></div>
+      <div class="form-group"><label>পাসওয়ার্ড</label><input id="l-pass" type="password" placeholder="পাসওয়ার্ড"></div>
+      <button class="auth-btn" onclick="doLogin()">লগইন করুন</button>
     </div>
-  </div>
-  <div id="tasks" class="page">
-    <h1>টাস্ক</h1>
-    <div class="card">
-      <div class="card-header"><span class="card-title">সকল টাস্ক</span><button class="btn btn-primary" onclick="openModal('task-modal')">+ নতুন টাস্ক</button></div>
-      <table><thead><tr><th>টাস্ক</th><th>প্রজেক্ট</th><th>ডেডলাইন</th><th>সম্পন্ন</th><th>একশন</th></tr></thead><tbody id="tasks-table"></tbody></table>
+    <div id="signup-form" style="display:none">
+      <div class="form-group"><label>নাম</label><input id="s-name" type="text" placeholder="আপনার নাম"></div>
+      <div class="form-group"><label>ইমেইল</label><input id="s-email" type="email" placeholder="আপনার ইমেইল"></div>
+      <div class="form-group"><label>পাসওয়ার্ড</label><input id="s-pass" type="password" placeholder="কমপক্ষে ৬ অক্ষর"></div>
+      <button class="auth-btn" onclick="doSignup()">একাউন্ট তৈরি করুন</button>
     </div>
-  </div>
-  <div id="invoices" class="page">
-    <h1>ইনভয়েস</h1>
-    <div class="card">
-      <div class="card-header"><span class="card-title">সকল ইনভয়েস</span><button class="btn btn-primary" onclick="openModal('invoice-modal')">+ নতুন ইনভয়েস</button></div>
-      <table><thead><tr><th>ক্লায়েন্ট</th><th>পরিমাণ</th><th>ডিউ ডেট</th><th>স্ট্যাটাস</th><th>একশন</th></tr></thead><tbody id="invoices-table"></tbody></table>
-    </div>
+    <div class="auth-msg" id="auth-msg"></div>
   </div>
 </div>
-<div id="client-modal" class="modal-overlay"><div class="modal"><h2>নতুন ক্লায়েন্ট</h2><div class="form-group"><label>নাম *</label><input id="c-name" placeholder="ক্লায়েন্টের নাম"></div><div class="form-group"><label>ইমেইল</label><input id="c-email" type="email"></div><div class="form-group"><label>ফোন</label><input id="c-phone"></div><div class="form-group"><label>নোট</label><textarea id="c-notes" rows="2"></textarea></div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('client-modal')">বাতিল</button><button class="btn btn-primary" onclick="addClient()">সেভ</button></div></div></div>
-<div id="project-modal" class="modal-overlay"><div class="modal"><h2>নতুন প্রজেক্ট</h2><div class="form-group"><label>নাম *</label><input id="p-title"></div><div class="form-group"><label>ক্লায়েন্ট</label><select id="p-client"></select></div><div class="form-group"><label>বাজেট</label><input id="p-budget" type="number"></div><div class="form-group"><label>ডেডলাইন</label><input id="p-deadline" type="date"></div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('project-modal')">বাতিল</button><button class="btn btn-primary" onclick="addProject()">সেভ</button></div></div></div>
-<div id="task-modal" class="modal-overlay"><div class="modal"><h2>নতুন টাস্ক</h2><div class="form-group"><label>টাস্ক *</label><input id="t-title"></div><div class="form-group"><label>প্রজেক্ট</label><select id="t-project"></select></div><div class="form-group"><label>ডেডলাইন</label><input id="t-deadline" type="date"></div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('task-modal')">বাতিল</button><button class="btn btn-primary" onclick="addTask()">সেভ</button></div></div></div>
-<div id="invoice-modal" class="modal-overlay"><div class="modal"><h2>নতুন ইনভয়েস</h2><div class="form-group"><label>ক্লায়েন্ট</label><select id="i-client"></select></div><div class="form-group"><label>পরিমাণ *</label><input id="i-amount" type="number"></div><div class="form-group"><label>ডিউ ডেট</label><input id="i-due" type="date"></div><div class="form-group"><label>নোট</label><input id="i-note"></div><div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('invoice-modal')">বাতিল</button><button class="btn btn-primary" onclick="addInvoice()">সেভ</button></div></div></div>
+
+<!-- APP -->
+<div class="app-wrap" id="app-wrap">
+  <div class="sidebar">
+    <div class="logo">🎨 Design Manager</div>
+    <div class="user-info" id="user-email"></div>
+    <div class="nav-item active" onclick="showPage('dashboard', event)"><span>📊</span><span class="label">ড্যাশবোর্ড</span></div>
+    <div class="nav-item" onclick="showPage('clients', event)"><span>👥</span><span class="label">ক্লায়েন্ট</span></div>
+    <div class="nav-item" onclick="showPage('projects', event)"><span>📁</span><span class="label">প্রজেক্ট</span></div>
+    <div class="nav-item" onclick="showPage('tasks', event)"><span>✅</span><span class="label">টাস্ক</span></div>
+    <div class="nav-item" onclick="showPage('invoices', event)"><span>🧾</span><span class="label">ইনভয়েস</span></div>
+    <button class="logout-btn" onclick="doLogout()">🚪 লগআউট</button>
+  </div>
+
+  <div class="main">
+    <div id="dashboard" class="page active">
+      <h1>ড্যাশবোর্ড</h1>
+      <div class="stats">
+        <div class="stat-card blue"><div class="stat-label">মোট ক্লায়েন্ট</div><div class="stat-value" id="s-clients">0</div></div>
+        <div class="stat-card green"><div class="stat-label">চলমান প্রজেক্ট</div><div class="stat-value" id="s-projects">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">বাকি টাস্ক</div><div class="stat-value" id="s-tasks">0</div></div>
+        <div class="stat-card red"><div class="stat-label">বকেয়া পেমেন্ট</div><div class="stat-value" id="s-invoices">৳0</div></div>
+      </div>
+    </div>
+
+    <div id="clients" class="page">
+      <h1>ক্লায়েন্ট</h1>
+      <div class="card">
+        <div class="card-header"><span class="card-title">সকল ক্লায়েন্ট</span><button class="btn btn-primary" onclick="openModal('client-modal')">+ নতুন ক্লায়েন্ট</button></div>
+        <table><thead><tr><th>নাম</th><th>ইমেইল</th><th>ফোন</th><th>একশন</th></tr></thead>
+        <tbody id="clients-table"><tr><td colspan="4" class="empty">লোড হচ্ছে...</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div id="projects" class="page">
+      <h1>প্রজেক্ট</h1>
+      <div class="card">
+        <div class="card-header"><span class="card-title">সকল প্রজেক্ট</span><button class="btn btn-primary" onclick="openModal('project-modal')">+ নতুন প্রজেক্ট</button></div>
+        <table><thead><tr><th>নাম</th><th>ক্লায়েন্ট</th><th>বাজেট</th><th>ডেডলাইন</th><th>স্ট্যাটাস</th><th>একশন</th></tr></thead>
+        <tbody id="projects-table"><tr><td colspan="6" class="empty">লোড হচ্ছে...</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div id="tasks" class="page">
+      <h1>টাস্ক</h1>
+      <div class="card">
+        <div class="card-header"><span class="card-title">সকল টাস্ক</span><button class="btn btn-primary" onclick="openModal('task-modal')">+ নতুন টাস্ক</button></div>
+        <table><thead><tr><th>টাস্ক</th><th>প্রজেক্ট</th><th>ডেডলাইন</th><th>সম্পন্ন</th><th>একশন</th></tr></thead>
+        <tbody id="tasks-table"><tr><td colspan="5" class="empty">লোড হচ্ছে...</td></tr></tbody></table>
+      </div>
+    </div>
+
+    <div id="invoices" class="page">
+      <h1>ইনভয়েস</h1>
+      <div class="card">
+        <div class="card-header"><span class="card-title">সকল ইনভয়েস</span><button class="btn btn-primary" onclick="openModal('invoice-modal')">+ নতুন ইনভয়েস</button></div>
+        <table><thead><tr><th>ক্লায়েন্ট</th><th>পরিমাণ</th><th>ডিউ ডেট</th><th>স্ট্যাটাস</th><th>একশন</th></tr></thead>
+        <tbody id="invoices-table"><tr><td colspan="5" class="empty">লোড হচ্ছে...</td></tr></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="client-modal" class="modal-overlay">
+  <div class="modal">
+    <h2>নতুন ক্লায়েন্ট</h2>
+    <div class="form-group"><label>নাম *</label><input id="c-name" placeholder="ক্লায়েন্টের নাম"></div>
+    <div class="form-group"><label>ইমেইল</label><input id="c-email" type="email"></div>
+    <div class="form-group"><label>ফোন</label><input id="c-phone"></div>
+    <div class="form-group"><label>নোট</label><textarea id="c-notes" rows="2"></textarea></div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeModal('client-modal')">বাতিল</button>
+      <button class="btn btn-primary" onclick="addClient()">সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
+<div id="project-modal" class="modal-overlay">
+  <div class="modal">
+    <h2>নতুন প্রজেক্ট</h2>
+    <div class="form-group"><label>নাম *</label><input id="p-title"></div>
+    <div class="form-group"><label>ক্লায়েন্ট *</label><select id="p-client"><option value="">বেছে নিন</option></select></div>
+    <div class="form-group"><label>বাজেট (টাকা)</label><input id="p-budget" type="number"></div>
+    <div class="form-group"><label>ডেডলাইন</label><input id="p-deadline" type="date"></div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeModal('project-modal')">বাতিল</button>
+      <button class="btn btn-primary" onclick="addProject()">সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
+<div id="task-modal" class="modal-overlay">
+  <div class="modal">
+    <h2>নতুন টাস্ক</h2>
+    <div class="form-group"><label>টাস্ক *</label><input id="t-title"></div>
+    <div class="form-group"><label>প্রজেক্ট</label><select id="t-project"><option value="">বেছে নিন</option></select></div>
+    <div class="form-group"><label>ডেডলাইন</label><input id="t-deadline" type="date"></div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeModal('task-modal')">বাতিল</button>
+      <button class="btn btn-primary" onclick="addTask()">সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
+<div id="invoice-modal" class="modal-overlay">
+  <div class="modal">
+    <h2>নতুন ইনভয়েস</h2>
+    <div class="form-group"><label>ক্লায়েন্ট *</label><select id="i-client"><option value="">বেছে নিন</option></select></div>
+    <div class="form-group"><label>পরিমাণ (টাকা) *</label><input id="i-amount" type="number"></div>
+    <div class="form-group"><label>ডিউ ডেট</label><input id="i-due" type="date"></div>
+    <div class="form-group"><label>নোট</label><input id="i-note"></div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeModal('invoice-modal')">বাতিল</button>
+      <button class="btn btn-primary" onclick="addInvoice()">সেভ করুন</button>
+    </div>
+  </div>
+</div>
+
 <script>
 const SUPABASE_URL = 'https://gjhbpgqqdlzqmypjymtq.supabase.co';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqaGJwZ3FxZGx6cW15cGp5bXRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1ODk5MjgsImV4cCI6MjA5MjE2NTkyOH0.9xVg4xW2m0azXxXKRIoJrBRlup1fp3HMEyVm6z2cr40';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let clients=[],projects=[],tasks=[],invoices=[];
-async function loadAll(){const[c,p,t,i]=await Promise.all([sb.from('clients').select('*').order('created_at',{ascending:false}),sb.from('projects').select('*').order('created_at',{ascending:false}),sb.from('tasks').select('*').order('created_at',{ascending:false}),sb.from('invoices').select('*').order('created_at',{ascending:false})]);clients=c.data||[];projects=p.data||[];tasks=t.data||[];invoices=i.data||[];renderAll();}
-function renderAll(){document.getElementById('s-clients').textContent=clients.length;document.getElementById('s-projects').textContent=projects.filter(p=>p.status==='active').length;document.getElementById('s-tasks').textContent=tasks.filter(t=>!t.is_done).length;const unpaid=invoices.filter(i=>i.status==='unpaid').reduce((s,i)=>s+Number(i.amount),0);document.getElementById('s-invoices').textContent='৳'+unpaid.toLocaleString();renderClients();renderProjects();renderTasks();renderInvoices();populateSelects();}
-function renderClients(){const tb=document.getElementById('clients-table');if(!clients.length){tb.innerHTML='<tr><td colspan="4" class="empty">কোনো ক্লায়েন্ট নেই</td></tr>';return;}tb.innerHTML=clients.map(c=>`<tr><td>${c.name}</td><td>${c.email||'-'}</td><td>${c.phone||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('clients','${c.id}')">মুছুন</button></td></tr>`).join('');}
-function renderProjects(){const tb=document.getElementById('projects-table');if(!projects.length){tb.innerHTML='<tr><td colspan="6" class="empty">কোনো প্রজেক্ট নেই</td></tr>';return;}tb.innerHTML=projects.map(p=>{const cl=clients.find(c=>c.id===p.client_id);const badge=p.status==='active'?'badge-active':p.status==='completed'?'badge-completed':'badge-hold';const label=p.status==='active'?'চলমান':p.status==='completed'?'সম্পন্ন':'বিরতি';return`<tr><td>${p.title}</td><td>${cl?cl.name:'-'}</td><td>৳${Number(p.budget||0).toLocaleString()}</td><td>${p.deadline||'-'}</td><td><span class="badge ${badge}">${label}</span></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('projects','${p.id}')">মুছুন</button></td></tr>`;}).join('');}
-function renderTasks(){const tb=document.getElementById('tasks-table');if(!tasks.length){tb.innerHTML='<tr><td colspan="5" class="empty">কোনো টাস্ক নেই</td></tr>';return;}tb.innerHTML=tasks.map(t=>{const pr=projects.find(p=>p.id===t.project_id);return`<tr><td style="text-decoration:${t.is_done?'line-through':'none'}">${t.title}</td><td>${pr?pr.title:'-'}</td><td>${t.deadline||'-'}</td><td><input type="checkbox" ${t.is_done?'checked':''} onchange="toggleTask('${t.id}',this.checked)"></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('tasks','${t.id}')">মুছুন</button></td></tr>`;}).join('');}
-function renderInvoices(){const tb=document.getElementById('invoices-table');if(!invoices.length){tb.innerHTML='<tr><td colspan="5" class="empty">কোনো ইনভয়েস নেই</td></tr>';return;}tb.innerHTML=invoices.map(i=>{const cl=clients.find(c=>c.id===i.client_id);const badge=i.status==='paid'?'badge-paid':'badge-unpaid';const label=i.status==='paid'?'পেইড':'বাকি';return`<tr><td>${cl?cl.name:'-'}</td><td>৳${Number(i.amount).toLocaleString()}</td><td>${i.due_date||'-'}</td><td><span class="badge ${badge}">${label}</span></td><td><button class="btn btn-primary btn-sm" onclick="markPaid('${i.id}')">পেইড</button> <button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${i.id}')">মুছুন</button></td></tr>`;}).join('');}
-function populateSelects(){const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');document.getElementById('p-client').innerHTML='<option value="">ক্লায়েন্ট বেছে নিন</option>'+opts;document.getElementById('i-client').innerHTML='<option value="">ক্লায়েন্ট বেছে নিন</option>'+opts;const popts=projects.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');document.getElementById('t-project').innerHTML='<option value="">প্রজেক্ট বেছে নিন</option>'+popts;}
-async function addClient(){const name=document.getElementById('c-name').value.trim();if(!name)return alert('নাম দিন');await sb.from('clients').insert({name,email:document.getElementById('c-email').value,phone:document.getElementById('c-phone').value,notes:document.getElementById('c-notes').value});closeModal('client-modal');loadAll();}
-async function addProject(){const title=document.getElementById('p-title').value.trim();const client_id=document.getElementById('p-client').value;if(!title||!client_id)return alert('নাম ও ক্লায়েন্ট দিন');await sb.from('projects').insert({title,client_id,budget:document.getElementById('p-budget').value,deadline:document.getElementById('p-deadline').value});closeModal('project-modal');loadAll();}
-async function addTask(){const title=document.getElementById('t-title').value.trim();if(!title)return alert('টাস্ক লিখুন');await sb.from('tasks').insert({title,project_id:document.getElementById('t-project').value||null,deadline:document.getElementById('t-deadline').value});closeModal('task-modal');loadAll();}
-async function addInvoice(){const client_id=document.getElementById('i-client').value;const amount=document.getElementById('i-amount').value;if(!client_id||!amount)return alert('ক্লায়েন্ট ও পরিমাণ দিন');await sb.from('invoices').insert({client_id,amount,due_date:document.getElementById('i-due').value,note:document.getElementById('i-note').value});closeModal('invoice-modal');loadAll();}
-async function deleteItem(table,id){if(!confirm('মুছে ফেলবেন?'))return;await sb.from(table).delete().eq('id',id);loadAll();}
-async function toggleTask(id,done){await sb.from('tasks').update({is_done:done}).eq('id',id);loadAll();}
-async function markPaid(id){await sb.from('invoices').update({status:'paid'}).eq('id',id);loadAll();}
-function showPage(id,e){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');e.currentTarget.classList.add('active');}
-function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-loadAll();
+
+let currentUser = null;
+let clients = [], projects = [], tasks = [], invoices = [];
+
+// AUTH
+sb.auth.onAuthStateChange((event, session) => {
+  if (session) {
+    currentUser = session.user;
+    document.getElementById('auth-wrap').style.display = 'none';
+    document.getElementById('app-wrap').style.display = 'block';
+    document.getElementById('user-email').textContent = '👤 ' + session.user.email;
+    loadAll();
+  } else {
+    currentUser = null;
+    document.getElementById('auth-wrap').style.display = 'flex';
+    document.getElementById('app-wrap').style.display = 'none';
+  }
+});
+
+function switchTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach((t, i) => t.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'signup' && i === 1)));
+  document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('signup-form').style.display = tab === 'signup' ? 'block' : 'none';
+  document.getElementById('auth-msg').className = 'auth-msg';
+}
+
+async function doLogin() {
+  const email = document.getElementById('l-email').value.trim();
+  const pass = document.getElementById('l-pass').value;
+  if (!email || !pass) return showMsg('ইমেইল ও পাসওয়ার্ড দিন', 'error');
+  const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+  if (error) showMsg('ভুল ইমেইল বা পাসওয়ার্ড!', 'error');
+}
+
+async function doSignup() {
+  const email = document.getElementById('s-email').value.trim();
+  const pass = document.getElementById('s-pass').value;
+  if (!email || !pass) return showMsg('সব তথ্য দিন', 'error');
+  if (pass.length < 6) return showMsg('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে', 'error');
+  const { error } = await sb.auth.signUp({ email, password: pass });
+  if (error) showMsg(error.message, 'error');
+  else showMsg('একাউন্ট তৈরি হয়েছে! লগইন করুন।', 'success');
+}
+
+async function doLogout() {
+  await sb.auth.signOut();
+}
+
+function showMsg(msg, type) {
+  const el = document.getElementById('auth-msg');
+  el.textContent = msg;
+  el.className = 'auth-msg ' + type;
+}
+
+// DATA
+async function loadAll() {
+  if (!currentUser) return;
+  const uid = currentUser.id;
+  const [c, p, t, i] = await Promise.all([
+    sb.from('clients').select('*').eq('user_id', uid).order('created_at', {ascending: false}),
+    sb.from('projects').select('*').eq('user_id', uid).order('created_at', {ascending: false}),
+    sb.from('tasks').select('*').eq('user_id', uid).order('created_at', {ascending: false}),
+    sb.from('invoices').select('*').eq('user_id', uid).order('created_at', {ascending: false})
+  ]);
+  clients = c.data || []; projects = p.data || [];
+  tasks = t.data || []; invoices = i.data || [];
+  renderAll();
+}
+
+function renderAll() {
+  document.getElementById('s-clients').textContent = clients.length;
+  document.getElementById('s-projects').textContent = projects.filter(p => p.status === 'active').length;
+  document.getElementById('s-tasks').textContent = tasks.filter(t => !t.is_done).length;
+  const unpaid = invoices.filter(i => i.status === 'unpaid').reduce((s, i) => s + Number(i.amount), 0);
+  document.getElementById('s-invoices').textContent = '৳' + unpaid.toLocaleString();
+  renderClients(); renderProjects(); renderTasks(); renderInvoices(); populateSelects();
+}
+
+function renderClients() {
+  const tb = document.getElementById('clients-table');
+  if (!clients.length) { tb.innerHTML = '<tr><td colspan="4" class="empty">কোনো ক্লায়েন্ট নেই</td></tr>'; return; }
+  tb.innerHTML = clients.map(c => `<tr><td>${c.name}</td><td>${c.email||'-'}</td><td>${c.phone||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('clients','${c.id}')">মুছুন</button></td></tr>`).join('');
+}
+
+function renderProjects() {
+  const tb = document.getElementById('projects-table');
+  if (!projects.length) { tb.innerHTML = '<tr><td colspan="6" class="empty">কোনো প্রজেক্ট নেই</td></tr>'; return; }
+  tb.innerHTML = projects.map(p => {
+    const cl = clients.find(c => c.id === p.client_id);
+    const badge = p.status === 'active' ? 'badge-active' : p.status === 'completed' ? 'badge-completed' : 'badge-hold';
+    const label = p.status === 'active' ? 'চলমান' : p.status === 'completed' ? 'সম্পন্ন' : 'বিরতি';
+    return `<tr><td>${p.title}</td><td>${cl?cl.name:'-'}</td><td>৳${Number(p.budget||0).toLocaleString()}</td><td>${p.deadline||'-'}</td><td><span class="badge ${badge}">${label}</span></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('projects','${p.id}')">মুছুন</button></td></tr>`;
+  }).join('');
+}
+
+function renderTasks() {
+  const tb = document.getElementById('tasks-table');
+  if (!tasks.length) { tb.innerHTML = '<tr><td colspan="5" class="empty">কোনো টাস্ক নেই</td></tr>'; return; }
+  tb.innerHTML = tasks.map(t => {
+    const pr = projects.find(p => p.id === t.project_id);
+    return `<tr><td style="text-decoration:${t.is_done?'line-through':'none'};color:${t.is_done?'#aaa':''}">${t.title}</td><td>${pr?pr.title:'-'}</td><td>${t.deadline||'-'}</td><td><input type="checkbox" ${t.is_done?'checked':''} onchange="toggleTask('${t.id}',this.checked)"></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('tasks','${t.id}')">মুছুন</button></td></tr>`;
+  }).join('');
+}
+
+function renderInvoices() {
+  const tb = document.getElementById('invoices-table');
+  if (!invoices.length) { tb.innerHTML = '<tr><td colspan="5" class="empty">কোনো ইনভয়েস নেই</td></tr>'; return; }
+  tb.innerHTML = invoices.map(i => {
+    const cl = clients.find(c => c.id === i.client_id);
+    const badge = i.status === 'paid' ? 'badge-paid' : 'badge-unpaid';
+    const label = i.status === 'paid' ? 'পেইড' : 'বাকি';
+    return `<tr><td>${cl?cl.name:'-'}</td><td>৳${Number(i.amount).toLocaleString()}</td><td>${i.due_date||'-'}</td><td><span class="badge ${badge}">${label}</span></td><td><button class="btn btn-primary btn-sm" onclick="markPaid('${i.id}')">পেইড</button> <button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${i.id}')">মুছুন</button></td></tr>`;
+  }).join('');
+}
+
+function populateSelects() {
+  const opts = clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('p-client').innerHTML = '<option value="">বেছে নিন</option>' + opts;
+  document.getElementById('i-client').innerHTML = '<option value="">বেছে নিন</option>' + opts;
+  const popts = projects.map(p => `<option value="${p.id}">${p.title}</option>`).join('');
+  document.getElementById('t-project').innerHTML = '<option value="">বেছে নিন</option>' + popts;
+}
+
+async function addClient() {
+  const name = document.getElementById('c-name').value.trim();
+  if (!name) return alert('নাম দিন');
+  await sb.from('clients').insert({ user_id: currentUser.id, name, email: document.getElementById('c-email').value, phone: document.getElementById('c-phone').value, notes: document.getElementById('c-notes').value });
+  closeModal('client-modal'); loadAll();
+}
+
+async function addProject() {
+  const title = document.getElementById('p-title').value.trim();
+  const client_id = document.getElementById('p-client').value;
+  if (!title || !client_id) return alert('নাম ও ক্লায়েন্ট দিন');
+  await sb.from('projects').insert({ user_id: currentUser.id, title, client_id, budget: document.getElementById('p-budget').value, deadline: document.getElementById('p-deadline').value });
+  closeModal('project-modal'); loadAll();
+}
+
+async function addTask() {
+  const title = document.getElementById('t-title').value.trim();
+  if (!title) return alert('টাস্ক লিখুন');
+  await sb.from('tasks').insert({ user_id: currentUser.id, title, project_id: document.getElementById('t-project').value || null, deadline: document.getElementById('t-deadline').value });
+  closeModal('task-modal'); loadAll();
+}
+
+async function addInvoice() {
+  const client_id = document.getElementById('i-client').value;
+  const amount = document.getElementById('i-amount').value;
+  if (!client_id || !amount) return alert('ক্লায়েন্ট ও পরিমাণ দিন');
+  await sb.from('invoices').insert({ user_id: currentUser.id, client_id, amount, due_date: document.getElementById('i-due').value, note: document.getElementById('i-note').value });
+  closeModal('invoice-modal'); loadAll();
+}
+
+async function deleteItem(table, id) {
+  if (!confirm('মুছে ফেলবেন?')) return;
+  await sb.from(table).delete().eq('id', id);
+  loadAll();
+}
+
+async function toggleTask(id, done) {
+  await sb.from('tasks').update({ is_done: done }).eq('id', id);
+  loadAll();
+}
+
+async function markPaid(id) {
+  await sb.from('invoices').update({ status: 'paid' }).eq('id', id);
+  loadAll();
+}
+
+function showPage(id, e) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  e.currentTarget.classList.add('active');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 </script>
 </body>
 </html>
