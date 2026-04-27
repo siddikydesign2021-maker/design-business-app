@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,114 +7,125 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Segoe UI',sans-serif;background:#f4f6fb;color:#1a1a2e;}
-    .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);}
-    .auth-box{background:#fff;border-radius:20px;padding:40px;width:400px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+    :root{--bg:#0f1117;--bg2:#181c25;--bg3:#1e2330;--bg4:#242938;--border:#2a2f3d;--border2:#353b4e;--accent:#6c63ff;--accent2:#8b84ff;--text:#e8eaf0;--text2:#9098b0;--text3:#5a6278;--green:#1D9E75;--red:#E24B4A;--amber:#BA7517;--blue:#378ADD;--green-bg:rgba(29,158,117,0.12);--red-bg:rgba(226,75,74,0.12);--amber-bg:rgba(186,117,23,0.12);--blue-bg:rgba(55,138,221,0.12);--accent-bg:rgba(108,99,255,0.12);}
+    body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+    /* AUTH */
+    .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);}
+    .auth-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:36px;width:400px;max-width:95vw;}
     .auth-logo{text-align:center;margin-bottom:28px;}
-    .auth-logo h1{font-size:22px;color:#1a1a2e;font-weight:700;}
-    .auth-logo p{font-size:13px;color:#888;margin-top:4px;}
-    .auth-tabs{display:flex;margin-bottom:24px;border:1px solid #e8eaf0;border-radius:10px;overflow:hidden;}
-    .auth-tab{flex:1;padding:10px;text-align:center;font-size:14px;cursor:pointer;background:#f4f6fb;color:#888;font-weight:500;}
-    .auth-tab.active{background:#4361ee;color:#fff;}
-    .form-group{margin-bottom:16px;}
-    .form-group label{display:block;font-size:13px;color:#555;margin-bottom:6px;font-weight:500;}
-    .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1px solid #e8eaf0;border-radius:10px;font-size:14px;outline:none;}
-    .form-group input:focus,.form-group select:focus{border-color:#4361ee;}
-    .auth-btn{width:100%;padding:12px;background:#4361ee;color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:8px;}
-    .auth-msg{text-align:center;font-size:13px;margin-top:12px;padding:10px;border-radius:8px;display:none;}
-    .auth-msg.error{background:#fee2e2;color:#991b1b;display:block;}
-    .auth-msg.success{background:#d1fae5;color:#065f46;display:block;}
-    .app-wrap{display:none;}
-    .sidebar{position:fixed;left:0;top:0;width:220px;height:100vh;background:#1a1a2e;padding:24px 0;z-index:10;overflow-y:auto;}
-    .logo{color:#fff;font-size:15px;font-weight:700;padding:0 20px 20px;border-bottom:1px solid #2d2d4e;line-height:1.4;}
-    .user-info{padding:10px 20px;color:#8888aa;font-size:11px;border-bottom:1px solid #2d2d4e;margin-bottom:8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-    .nav-item{display:flex;align-items:center;gap:10px;padding:12px 20px;color:#8888aa;cursor:pointer;font-size:14px;transition:all 0.2s;}
-    .nav-item:hover,.nav-item.active{background:#2d2d4e;color:#fff;}
-    .logout-btn{position:absolute;bottom:20px;left:0;right:0;margin:0 16px;padding:10px;background:#2d2d4e;color:#ff6b6b;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;}
-    .main{margin-left:220px;padding:32px;}
+    .auth-logo h1{font-size:20px;color:var(--text);font-weight:500;}
+    .auth-logo p{font-size:13px;color:var(--text2);margin-top:4px;}
+    .auth-tabs{display:flex;margin-bottom:24px;background:var(--bg3);border-radius:10px;padding:4px;gap:4px;}
+    .auth-tab{flex:1;padding:9px;text-align:center;font-size:13px;cursor:pointer;border-radius:7px;color:var(--text2);font-weight:500;transition:all 0.2s;}
+    .auth-tab.active{background:var(--accent);color:#fff;}
+    .form-group{margin-bottom:14px;}
+    .form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500;}
+    .form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--text);outline:none;transition:border 0.2s;}
+    .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);}
+    .form-group select option{background:var(--bg3);}
+    .auth-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.2s;}
+    .auth-btn:hover{background:var(--accent2);}
+    .auth-msg{text-align:center;font-size:12px;margin-top:12px;padding:10px;border-radius:8px;display:none;}
+    .auth-msg.error{background:var(--red-bg);color:var(--red);display:block;border:1px solid rgba(226,75,74,0.2);}
+    .auth-msg.success{background:var(--green-bg);color:var(--green);display:block;border:1px solid rgba(29,158,117,0.2);}
+    /* APP */
+    .app-wrap{display:none;min-height:100vh;}
+    .sidebar{position:fixed;left:0;top:0;width:220px;height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:0;z-index:10;display:flex;flex-direction:column;}
+    .s-brand{padding:20px 20px 16px;border-bottom:1px solid var(--border);}
+    .s-brand-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .s-brand-email{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .s-nav{padding:12px 0;flex:1;}
+    .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;color:var(--text2);cursor:pointer;font-size:13px;border-left:2px solid transparent;transition:all 0.15s;}
+    .nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03);}
+    .nav-item.active{color:var(--text);background:var(--accent-bg);border-left:2px solid var(--accent);}
+    .nav-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(255,255,255,0.05);flex-shrink:0;}
+    .nav-item.active .nav-icon{background:var(--accent-bg);}
+    .s-footer{padding:16px 20px;border-top:1px solid var(--border);}
+    .logout-btn{width:100%;padding:9px;background:rgba(226,75,74,0.1);color:var(--red);border:1px solid rgba(226,75,74,0.2);border-radius:8px;cursor:pointer;font-size:12px;font-weight:500;}
+    .logout-btn:hover{background:rgba(226,75,74,0.2);}
+    .main{margin-left:220px;padding:28px 32px;min-height:100vh;}
     .page{display:none;}.page.active{display:block;}
-    h1{font-size:24px;font-weight:700;margin-bottom:24px;color:#1a1a2e;}
-    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:24px;}
-    .stat-card{background:#fff;border-radius:12px;padding:20px;border:1px solid #e8eaf0;}
-    .stat-label{font-size:13px;color:#888;margin-bottom:8px;}
-    .stat-value{font-size:28px;font-weight:700;}
-    .stat-card.blue .stat-value{color:#4361ee;}
-    .stat-card.green .stat-value{color:#2ec4b6;}
-    .stat-card.orange .stat-value{color:#f77f00;}
-    .stat-card.red .stat-value{color:#e63946;}
-    .card{background:#fff;border-radius:12px;padding:24px;border:1px solid #e8eaf0;margin-bottom:24px;}
-    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
-    .card-title{font-size:16px;font-weight:600;}
-    .btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:13px;font-weight:500;transition:all 0.2s;}
-    .btn-primary{background:#4361ee;color:#fff;}
-    .btn-success{background:#d1fae5;color:#065f46;}
-    .btn-danger{background:#fee2e2;color:#e63946;}
-    .btn-sm{padding:5px 10px;font-size:12px;}
+    .page-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;}
+    .page-title{font-size:20px;font-weight:500;color:var(--text);}
+    /* STATS */
+    .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
+    .stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px;}
+    .stat-label{font-size:12px;color:var(--text2);margin-bottom:10px;}
+    .stat-value{font-size:26px;font-weight:500;}
+    /* CARDS */
+    .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
+    .card-title{font-size:14px;font-weight:500;color:var(--text);}
+    /* BUTTONS */
+    .btn{padding:8px 16px;border-radius:8px;border:none;cursor:pointer;font-size:12px;font-weight:500;transition:all 0.2s;}
+    .btn-primary{background:var(--accent);color:#fff;}
+    .btn-primary:hover{background:var(--accent2);}
+    .btn-success{background:var(--green-bg);color:var(--green);border:1px solid rgba(29,158,117,0.2);}
+    .btn-danger{background:var(--red-bg);color:var(--red);border:1px solid rgba(226,75,74,0.2);}
+    .btn-sm{padding:5px 10px;font-size:11px;}
+    /* TABLE */
     table{width:100%;border-collapse:collapse;}
-    th{text-align:left;padding:10px 12px;font-size:12px;color:#888;border-bottom:1px solid #e8eaf0;font-weight:600;text-transform:uppercase;}
-    td{padding:12px;font-size:13px;border-bottom:1px solid #f4f6fb;}
-    tr:hover td{background:#f9faff;}
-    .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
-    .badge-active{background:#d1fae5;color:#065f46;}
-    .badge-completed{background:#e0e7ff;color:#3730a3;}
-    .badge-hold{background:#fef3c7;color:#92400e;}
-    .badge-paid{background:#d1fae5;color:#065f46;}
-    .badge-unpaid{background:#fee2e2;color:#991b1b;}
-    .badge-partial{background:#fef3c7;color:#92400e;}
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;justify-content:center;align-items:center;}
+    th{text-align:left;padding:10px 12px;font-size:11px;color:var(--text3);border-bottom:1px solid var(--border);font-weight:500;text-transform:uppercase;letter-spacing:0.5px;}
+    td{padding:12px;font-size:13px;border-bottom:1px solid var(--border);color:var(--text2);}
+    td:first-child{color:var(--text);}
+    tr:last-child td{border-bottom:none;}
+    tr:hover td{background:rgba(255,255,255,0.02);}
+    /* BADGES */
+    .badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;}
+    .badge-active{background:var(--green-bg);color:var(--green);}
+    .badge-completed{background:var(--blue-bg);color:var(--blue);}
+    .badge-hold{background:var(--amber-bg);color:var(--amber);}
+    .badge-paid{background:var(--green-bg);color:var(--green);}
+    .badge-unpaid{background:var(--red-bg);color:var(--red);}
+    .badge-partial{background:var(--amber-bg);color:var(--amber);}
+    /* MODAL */
+    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:100;justify-content:center;align-items:center;}
     .modal-overlay.open{display:flex;}
-    .modal{background:#fff;border-radius:16px;padding:28px;width:560px;max-width:95vw;max-height:90vh;overflow-y:auto;}
-    .modal h2{font-size:18px;margin-bottom:20px;}
-    .modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;}
-    .btn-cancel{background:#f4f6fb;color:#555;}
-    .empty{text-align:center;padding:40px;color:#aaa;font-size:14px;}
-    .calc-card{background:#1a1a2e;border-radius:16px;padding:28px;margin-bottom:24px;color:#fff;}
-    .calc-title{font-size:18px;font-weight:700;margin-bottom:20px;}
-    .calc-input-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px;}
-    .calc-input-group label{display:block;font-size:12px;color:#8888aa;margin-bottom:6px;}
-    .calc-input-group input{width:100%;padding:12px 14px;background:#2d2d4e;border:1px solid #3d3d6e;border-radius:10px;color:#fff;font-size:15px;outline:none;}
-    .divisions{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
-    .division-box{background:#2d2d4e;border-radius:12px;padding:16px;}
-    .division-name-input{background:transparent;border:none;border-bottom:1px solid #4d4d7e;color:#fff;font-size:14px;font-weight:600;width:100%;outline:none;padding-bottom:4px;margin-bottom:12px;}
-    .division-name-input::placeholder{color:#6666aa;}
-    .percent-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
-    .percent-input{width:70px;padding:6px 10px;background:#1a1a2e;border:1px solid #4d4d7e;border-radius:8px;color:#fff;font-size:14px;text-align:center;outline:none;}
-    .percent-label{color:#8888aa;font-size:13px;}
-    .division-amount{font-size:22px;font-weight:700;color:#4361ee;}
-    .division-amount.green{color:#2ec4b6;}
-    .division-amount.orange{color:#f77f00;}
-    .calc-total-row{display:flex;justify-content:space-between;align-items:center;background:#2d2d4e;border-radius:10px;padding:14px 18px;}
-    .calc-total-label{font-size:13px;color:#8888aa;}
-    .calc-total-value{font-size:18px;font-weight:700;color:#fff;}
-    .percent-warning{font-size:12px;color:#f77f00;margin-bottom:12px;display:none;}
-    .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-    .settings-section{background:#fff;border-radius:12px;padding:24px;border:1px solid #e8eaf0;margin-bottom:20px;}
-    .settings-section h3{font-size:15px;font-weight:600;margin-bottom:16px;}
-    .logo-upload-box{border:2px dashed #e8eaf0;border-radius:10px;padding:20px;text-align:center;cursor:pointer;margin-bottom:12px;}
-    .logo-upload-box:hover{border-color:#4361ee;}
-    .logo-preview{max-height:80px;max-width:200px;margin:8px auto;display:block;}
+    .modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;width:540px;max-width:95vw;max-height:90vh;overflow-y:auto;}
+    .modal h2{font-size:16px;font-weight:500;margin-bottom:20px;color:var(--text);}
+    .modal-btns{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+    .btn-cancel{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
+    .empty{text-align:center;padding:40px;color:var(--text3);font-size:13px;}
+    /* CALC */
+    .calc-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+    .calc-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
+    .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+    .calc-inp-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;}
+    .calc-inp-group input{width:100%;padding:11px 14px;background:var(--bg4);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;outline:none;}
+    .calc-inp-group input:focus{border-color:var(--accent);}
+    .divisions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
+    .div-box{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:14px;}
+    .div-name-inp{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-size:13px;font-weight:500;width:100%;outline:none;padding-bottom:6px;margin-bottom:10px;}
+    .div-name-inp::placeholder{color:var(--text3);}
+    .pct-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
+    .pct-inp{width:60px;padding:5px 8px;background:var(--bg2);border:1px solid var(--border);border-radius:7px;color:var(--text);font-size:13px;text-align:center;outline:none;}
+    .pct-lbl{font-size:12px;color:var(--text3);}
+    .div-amt{font-size:20px;font-weight:500;}
+    .calc-total-row{display:flex;justify-content:space-between;align-items:center;background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+    .pct-warn{font-size:12px;color:var(--amber);margin-bottom:12px;display:none;}
+    /* SETTINGS */
+    .settings-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:20px;}
+    .settings-section h3{font-size:14px;font-weight:500;color:var(--text);margin-bottom:16px;}
+    .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .logo-box{border:1px dashed var(--border2);border-radius:10px;padding:20px;text-align:center;cursor:pointer;margin-bottom:14px;transition:border 0.2s;}
+    .logo-box:hover{border-color:var(--accent);}
     /* INV ITEMS */
-    .inv-items-table{width:100%;border-collapse:collapse;margin-bottom:12px;}
-    .inv-items-table th{background:#f4f6fb;padding:8px 10px;font-size:12px;color:#555;font-weight:600;}
-    .inv-items-table td{padding:6px 4px;}
-    .inv-items-table input{width:100%;padding:6px 8px;border:1px solid #e8eaf0;border-radius:6px;font-size:13px;outline:none;}
-    .inv-items-table input:focus{border-color:#4361ee;}
-    .add-row-btn{background:#f0f4ff;color:#4361ee;border:none;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;margin-bottom:12px;}
-    @media print{
-      body *{visibility:hidden;}
-      #invoice-print,#invoice-print *{visibility:visible;}
-      #invoice-print{position:fixed;left:0;top:0;width:100%;background:#fff;}
-      @page{size:A4;margin:15mm;}
-    }
+    .inv-items-tbl{width:100%;border-collapse:collapse;margin-bottom:10px;}
+    .inv-items-tbl th{background:var(--bg3);padding:8px 10px;font-size:11px;color:var(--text3);font-weight:500;text-align:left;}
+    .inv-items-tbl td{padding:5px 4px;}
+    .inv-items-tbl input{width:100%;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--text);outline:none;}
+    .inv-items-tbl input:focus{border-color:var(--accent);}
+    .add-row-btn{background:var(--accent-bg);color:var(--accent2);border:1px solid rgba(108,99,255,0.2);border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;margin-bottom:14px;}
+    /* PROGRESS */
+    .progress-section{margin-top:4px;}
+    .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+    .progress-label{font-size:12px;color:var(--text2);min-width:120px;}
+    .progress-bar{flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+    .progress-fill{height:100%;border-radius:2px;background:var(--accent);}
+    /* PRINT */
+    @media print{body *{visibility:hidden;}#invoice-print,#invoice-print *{visibility:visible;}#invoice-print{position:fixed;left:0;top:0;width:100%;background:#fff;}@page{size:A4;margin:15mm;}}
     #invoice-print{display:none;}
-    @media(max-width:768px){
-      .sidebar{width:60px;}
-      .nav-item .label,.user-info,.logo-text{display:none;}
-      .main{margin-left:60px;padding:16px;}
-      .divisions{grid-template-columns:1fr;}
-      .calc-input-row{grid-template-columns:1fr;}
-      .settings-grid{grid-template-columns:1fr;}
-    }
+    @media(max-width:768px){.sidebar{width:56px;}.nav-item .label,.s-brand,.s-footer span{display:none;}.main{margin-left:56px;padding:16px;}.divisions{grid-template-columns:1fr;}.calc-grid{grid-template-columns:1fr;}.settings-grid{grid-template-columns:1fr;}}
   </style>
 </head>
 <body>
@@ -122,22 +133,22 @@
 <div class="auth-wrap" id="auth-wrap">
   <div class="auth-box">
     <div class="auth-logo">
-      <h1 id="auth-title">🎨 Design Manager</h1>
-      <p>আপনার ডিজাইন বিজনেস ম্যানেজ করুন</p>
+      <h1 id="auth-title">Design Manager</h1>
+      <p>Manage your design business</p>
     </div>
     <div class="auth-tabs">
-      <div class="auth-tab active" onclick="switchTab('login')">লগইন</div>
-      <div class="auth-tab" onclick="switchTab('signup')">সাইনআপ</div>
+      <div class="auth-tab active" onclick="switchTab('login')">Login</div>
+      <div class="auth-tab" onclick="switchTab('signup')">Sign Up</div>
     </div>
     <div id="login-form">
-      <div class="form-group"><label>ইমেইল</label><input id="l-email" type="email" placeholder="আপনার ইমেইল"></div>
-      <div class="form-group"><label>পাসওয়ার্ড</label><input id="l-pass" type="password" placeholder="পাসওয়ার্ড"></div>
-      <button class="auth-btn" onclick="doLogin()">লগইন করুন</button>
+      <div class="form-group"><label>Email</label><input id="l-email" type="email" placeholder="your@email.com"></div>
+      <div class="form-group"><label>Password</label><input id="l-pass" type="password" placeholder="Password"></div>
+      <button class="auth-btn" onclick="doLogin()">Login</button>
     </div>
     <div id="signup-form" style="display:none">
-      <div class="form-group"><label>ইমেইল</label><input id="s-email" type="email" placeholder="আপনার ইমেইল"></div>
-      <div class="form-group"><label>পাসওয়ার্ড</label><input id="s-pass" type="password" placeholder="কমপক্ষে ৬ অক্ষর"></div>
-      <button class="auth-btn" onclick="doSignup()">একাউন্ট তৈরি করুন</button>
+      <div class="form-group"><label>Email</label><input id="s-email" type="email" placeholder="your@email.com"></div>
+      <div class="form-group"><label>Password</label><input id="s-pass" type="password" placeholder="Min 6 characters"></div>
+      <button class="auth-btn" onclick="doSignup()">Create Account</button>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
   </div>
@@ -145,100 +156,108 @@
 
 <div class="app-wrap" id="app-wrap">
   <div class="sidebar">
-    <div class="logo"><span class="logo-text" id="sidebar-biz-name">🎨 Design Manager</span></div>
-    <div class="user-info" id="user-email"></div>
-    <div class="nav-item active" onclick="showPage('dashboard',event)"><span>📊</span><span class="label">ড্যাশবোর্ড</span></div>
-    <div class="nav-item" onclick="showPage('clients',event)"><span>👥</span><span class="label">ক্লায়েন্ট</span></div>
-    <div class="nav-item" onclick="showPage('projects',event)"><span>📁</span><span class="label">প্রজেক্ট</span></div>
-    <div class="nav-item" onclick="showPage('tasks',event)"><span>✅</span><span class="label">টাস্ক</span></div>
-    <div class="nav-item" onclick="showPage('invoices',event)"><span>🧾</span><span class="label">INVOICE</span></div>
-    <div class="nav-item" onclick="showPage('settings',event)"><span>⚙️</span><span class="label">সেটিংস</span></div>
-    <button class="logout-btn" onclick="doLogout()">🚪 লগআউট</button>
+    <div class="s-brand">
+      <div class="s-brand-name" id="sidebar-biz-name">Design Manager</div>
+      <div class="s-brand-email" id="user-email"></div>
+    </div>
+    <div class="s-nav">
+      <div class="nav-item active" onclick="showPage('dashboard',event)"><div class="nav-icon">📊</div><span class="label">Dashboard</span></div>
+      <div class="nav-item" onclick="showPage('clients',event)"><div class="nav-icon">👥</div><span class="label">Clients</span></div>
+      <div class="nav-item" onclick="showPage('projects',event)"><div class="nav-icon">📁</div><span class="label">Projects</span></div>
+      <div class="nav-item" onclick="showPage('tasks',event)"><div class="nav-icon">✅</div><span class="label">Tasks</span></div>
+      <div class="nav-item" onclick="showPage('invoices',event)"><div class="nav-icon">🧾</div><span class="label">Invoices</span></div>
+      <div class="nav-item" onclick="showPage('settings',event)"><div class="nav-icon">⚙️</div><span class="label">Settings</span></div>
+    </div>
+    <div class="s-footer">
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
   </div>
 
   <div class="main">
+    <!-- DASHBOARD -->
     <div id="dashboard" class="page active">
-      <h1>ড্যাশবোর্ড</h1>
+      <div class="page-header"><div class="page-title">Dashboard</div></div>
       <div class="stats">
-        <div class="stat-card blue"><div class="stat-label">মোট ক্লায়েন্ট</div><div class="stat-value" id="s-clients">0</div></div>
-        <div class="stat-card green"><div class="stat-label">চলমান প্রজেক্ট</div><div class="stat-value" id="s-projects">0</div></div>
-        <div class="stat-card orange"><div class="stat-label">Due টাস্ক</div><div class="stat-value" id="s-tasks">0</div></div>
-        <div class="stat-card red"><div class="stat-label">বকেয়া পেমেন্ট</div><div class="stat-value" id="s-invoices">৳0</div></div>
+        <div class="stat-card"><div class="stat-label">Total Clients</div><div class="stat-value" style="color:var(--accent2)" id="s-clients">0</div></div>
+        <div class="stat-card"><div class="stat-label">Active Projects</div><div class="stat-value" style="color:var(--green)" id="s-projects">0</div></div>
+        <div class="stat-card"><div class="stat-label">Pending Tasks</div><div class="stat-value" style="color:var(--amber)" id="s-tasks">0</div></div>
+        <div class="stat-card"><div class="stat-label">Due Payment</div><div class="stat-value" style="color:var(--red)" id="s-invoices">৳0</div></div>
       </div>
       <div class="calc-card">
-        <div class="calc-title">💰 লাভ ভাগ ক্যালকুলেটর</div>
-        <div class="calc-input-row">
-          <div class="calc-input-group"><label>মোট আয় (টাকা)</label><input type="number" id="total-income" placeholder="যেমন: 50000" oninput="calculate()"></div>
-          <div class="calc-input-group"><label>মোট খরচ (টাকা)</label><input type="number" id="total-expense" placeholder="যেমন: 10000" oninput="calculate()"></div>
+        <div class="calc-title">💰 Profit Calculator</div>
+        <div class="calc-grid">
+          <div class="calc-inp-group"><label>Total Income (৳)</label><input type="number" id="total-income" placeholder="e.g. 50000" oninput="calculate()"></div>
+          <div class="calc-inp-group"><label>Total Expense (৳)</label><input type="number" id="total-expense" placeholder="e.g. 10000" oninput="calculate()"></div>
         </div>
         <div class="divisions">
-          <div class="division-box"><input class="division-name-input" id="name1" placeholder="ভাগের নাম ১" oninput="saveDivisions()"><div class="percent-row"><input class="percent-input" id="pct1" type="number" value="40" oninput="calculate()"><span class="percent-label">%</span></div><div class="division-amount" id="amt1">৳ 0</div></div>
-          <div class="division-box"><input class="division-name-input" id="name2" placeholder="ভাগের নাম ২" oninput="saveDivisions()"><div class="percent-row"><input class="percent-input" id="pct2" type="number" value="30" oninput="calculate()"><span class="percent-label">%</span></div><div class="division-amount green" id="amt2">৳ 0</div></div>
-          <div class="division-box"><input class="division-name-input" id="name3" placeholder="ভাগের নাম ৩" oninput="saveDivisions()"><div class="percent-row"><input class="percent-input" id="pct3" type="number" value="30" oninput="calculate()"><span class="percent-label">%</span></div><div class="division-amount orange" id="amt3">৳ 0</div></div>
+          <div class="div-box"><input class="div-name-inp" id="name1" placeholder="Division 1" oninput="saveDivisions()"><div class="pct-row"><input class="pct-inp" id="pct1" type="number" value="40" oninput="calculate()"><span class="pct-lbl">%</span></div><div class="div-amt" style="color:var(--accent2)" id="amt1">৳ 0</div></div>
+          <div class="div-box"><input class="div-name-inp" id="name2" placeholder="Division 2" oninput="saveDivisions()"><div class="pct-row"><input class="pct-inp" id="pct2" type="number" value="30" oninput="calculate()"><span class="pct-lbl">%</span></div><div class="div-amt" style="color:var(--green)" id="amt2">৳ 0</div></div>
+          <div class="div-box"><input class="div-name-inp" id="name3" placeholder="Division 3" oninput="saveDivisions()"><div class="pct-row"><input class="pct-inp" id="pct3" type="number" value="30" oninput="calculate()"><span class="pct-lbl">%</span></div><div class="div-amt" style="color:var(--amber)" id="amt3">৳ 0</div></div>
         </div>
-        <div class="percent-warning" id="pct-warning">⚠️ মোট % ১০০ হতে হবে! এখন: <span id="pct-total">100</span>%</div>
-        <div class="calc-total-row"><span class="calc-total-label">মোট লাভ</span><span class="calc-total-value" id="net-profit">৳ 0</span></div>
+        <div class="pct-warn" id="pct-warning">⚠️ Total % must be 100! Current: <span id="pct-total">100</span>%</div>
+        <div class="calc-total-row"><span style="font-size:13px;color:var(--text2)">Net Profit</span><span style="font-size:18px;font-weight:500;color:var(--text)" id="net-profit">৳ 0</span></div>
       </div>
     </div>
 
+    <!-- CLIENTS -->
     <div id="clients" class="page">
-      <h1>ক্লায়েন্ট</h1>
+      <div class="page-header"><div class="page-title">Clients</div><button class="btn btn-primary" onclick="openModal('client-modal')">+ New Client</button></div>
       <div class="card">
-        <div class="card-header"><span class="card-title">সকল ক্লায়েন্ট</span><button class="btn btn-primary" onclick="openModal('client-modal')">+ নতুন ক্লায়েন্ট</button></div>
-        <table><thead><tr><th>নাম</th><th>ইমেইল</th><th>ফোন</th><th>Action</th></tr></thead>
+        <table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Action</th></tr></thead>
         <tbody id="clients-table"></tbody></table>
       </div>
     </div>
 
+    <!-- PROJECTS -->
     <div id="projects" class="page">
-      <h1>প্রজেক্ট</h1>
+      <div class="page-header"><div class="page-title">Projects</div><button class="btn btn-primary" onclick="openModal('project-modal')">+ New Project</button></div>
       <div class="card">
-        <div class="card-header"><span class="card-title">সকল প্রজেক্ট</span><button class="btn btn-primary" onclick="openModal('project-modal')">+ নতুন প্রজেক্ট</button></div>
-        <table><thead><tr><th>নাম</th><th>ক্লায়েন্ট</th><th>বাজেট</th><th>ডেডলাইন</th><th>Status</th><th>Action</th></tr></thead>
+        <table><thead><tr><th>Name</th><th>Client</th><th>Budget</th><th>Deadline</th><th>Status</th><th>Action</th></tr></thead>
         <tbody id="projects-table"></tbody></table>
       </div>
     </div>
 
+    <!-- TASKS -->
     <div id="tasks" class="page">
-      <h1>টাস্ক</h1>
+      <div class="page-header"><div class="page-title">Tasks</div><button class="btn btn-primary" onclick="openModal('task-modal')">+ New Task</button></div>
       <div class="card">
-        <div class="card-header"><span class="card-title">সকল টাস্ক</span><button class="btn btn-primary" onclick="openModal('task-modal')">+ নতুন টাস্ক</button></div>
-        <table><thead><tr><th>টাস্ক</th><th>প্রজেক্ট</th><th>ডেডলাইন</th><th>সম্পন্ন</th><th>Action</th></tr></thead>
+        <table><thead><tr><th>Task</th><th>Project</th><th>Deadline</th><th>Done</th><th>Action</th></tr></thead>
         <tbody id="tasks-table"></tbody></table>
       </div>
     </div>
 
+    <!-- INVOICES -->
     <div id="invoices" class="page">
-      <h1>INVOICE</h1>
+      <div class="page-header"><div class="page-title">Invoices</div><button class="btn btn-primary" onclick="openModal('invoice-modal')">+ New Invoice</button></div>
       <div class="card">
-        <div class="card-header"><span class="card-title">সকল ইনভয়েস</span><button class="btn btn-primary" onclick="openModal('invoice-modal')">+ নতুন ইনভয়েস</button></div>
-        <table><thead><tr><th>Invoice #</th><th>ক্লায়েন্ট</th><th>Total Bill</th><th>Advance</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
+        <table><thead><tr><th>Invoice #</th><th>Client</th><th>Total</th><th>Advance</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
         <tbody id="invoices-table"></tbody></table>
       </div>
     </div>
 
+    <!-- SETTINGS -->
     <div id="settings" class="page">
-      <h1>⚙️ সেটিংস</h1>
+      <div class="page-header"><div class="page-title">Settings</div></div>
       <div class="settings-section">
-        <h3>🏢 বিজনেস তথ্য</h3>
+        <h3>Business Info</h3>
         <div style="margin-bottom:16px;">
-          <label style="display:block;font-size:13px;color:#555;margin-bottom:8px;font-weight:500;">লোগো আপলোড করুন</label>
-          <div class="logo-upload-box" onclick="document.getElementById('logo-file').click()">
-            <img id="logo-preview" class="logo-preview" style="display:none;">
-            <div id="logo-placeholder" style="color:#aaa;font-size:13px;">📷 ক্লিক করে লোগো আপলোড করুন</div>
+          <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:8px;">Logo</label>
+          <div class="logo-box" onclick="document.getElementById('logo-file').click()">
+            <img id="logo-preview" style="max-height:70px;max-width:180px;margin:0 auto;display:none;">
+            <div id="logo-placeholder" style="color:var(--text3);font-size:13px;">Click to upload logo</div>
           </div>
           <input type="file" id="logo-file" accept="image/*" style="display:none;" onchange="uploadLogo(this)">
         </div>
         <div class="settings-grid">
-          <div class="form-group"><label>প্রতিষ্ঠানের নাম</label><input id="biz-name" placeholder="যেমন: Siddiky Design Studio"></div>
-          <div class="form-group"><label>ফোন নম্বর</label><input id="biz-phone" placeholder="01XXXXXXXXX"></div>
-          <div class="form-group"><label>ঠিকানা</label><input id="biz-address" placeholder="পূর্ণ ঠিকানা"></div>
-          <div class="form-group"><label>ইমেইল</label><input id="biz-email" type="email" placeholder="বিজনেস ইমেইল"></div>
-          <div class="form-group"><label>বিকাশ/নগদ নম্বর</label><input id="biz-bkash" placeholder="01XXXXXXXXX"></div>
-          <div class="form-group"><label>পেমেন্ট নির্দেশনা</label><input id="biz-payment-note" placeholder="যেমন: বিকাশে পেমেন্ট করুন"></div>
+          <div class="form-group"><label>Business Name</label><input id="biz-name" placeholder="e.g. Siddiky Design Studio"></div>
+          <div class="form-group"><label>Phone</label><input id="biz-phone" placeholder="01XXXXXXXXX"></div>
+          <div class="form-group"><label>Address</label><input id="biz-address" placeholder="Full address"></div>
+          <div class="form-group"><label>Email</label><input id="biz-email" type="email" placeholder="business@email.com"></div>
+          <div class="form-group"><label>bKash/Nagad Number</label><input id="biz-bkash" placeholder="01XXXXXXXXX"></div>
+          <div class="form-group"><label>Payment Note</label><input id="biz-payment-note" placeholder="e.g. Send payment via bKash"></div>
         </div>
-        <button class="btn btn-primary" onclick="saveSettings()">Save ✓</button>
-        <span id="settings-saved" style="margin-left:12px;color:#065f46;font-size:13px;display:none;">সেভ হয়েছে ✓</span>
+        <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+        <span id="settings-saved" style="margin-left:12px;color:var(--green);font-size:12px;display:none;">Saved ✓</span>
       </div>
     </div>
   </div>
@@ -249,56 +268,56 @@
 <!-- MODALS -->
 <div id="client-modal" class="modal-overlay">
   <div class="modal">
-    <h2>নতুন ক্লায়েন্ট</h2>
-    <div class="form-group"><label>নাম *</label><input id="c-name" placeholder="ক্লায়েন্টের নাম"></div>
-    <div class="form-group"><label>ইমেইল</label><input id="c-email" type="email"></div>
-    <div class="form-group"><label>ফোন</label><input id="c-phone"></div>
-    <div class="form-group"><label>ঠিকানা</label><input id="c-address"></div>
-    <div class="form-group"><label>Note</label><textarea id="c-notes" rows="2"></textarea></div>
+    <h2>New Client</h2>
+    <div class="form-group"><label>Name *</label><input id="c-name" placeholder="Client name"></div>
+    <div class="form-group"><label>Email</label><input id="c-email" type="email"></div>
+    <div class="form-group"><label>Phone</label><input id="c-phone"></div>
+    <div class="form-group"><label>Address</label><input id="c-address"></div>
+    <div class="form-group"><label>Notes</label><textarea id="c-notes" rows="2"></textarea></div>
     <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('client-modal')">Cancel</button><button class="btn btn-primary" onclick="addClient()">Save</button></div>
   </div>
 </div>
 
 <div id="project-modal" class="modal-overlay">
   <div class="modal">
-    <h2>নতুন প্রজেক্ট</h2>
-    <div class="form-group"><label>নাম *</label><input id="p-title"></div>
-    <div class="form-group"><label>Client *</label><select id="p-client"><option value="">Select</option></select></div>
-    <div class="form-group"><label>বাজেট (টাকা)</label><input id="p-budget" type="number"></div>
-    <div class="form-group"><label>ডেডলাইন</label><input id="p-deadline" type="date"></div>
+    <h2>New Project</h2>
+    <div class="form-group"><label>Name *</label><input id="p-title"></div>
+    <div class="form-group"><label>Client *</label><select id="p-client"><option value="">Select client</option></select></div>
+    <div class="form-group"><label>Budget (৳)</label><input id="p-budget" type="number"></div>
+    <div class="form-group"><label>Deadline</label><input id="p-deadline" type="date"></div>
     <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('project-modal')">Cancel</button><button class="btn btn-primary" onclick="addProject()">Save</button></div>
   </div>
 </div>
 
 <div id="task-modal" class="modal-overlay">
   <div class="modal">
-    <h2>নতুন টাস্ক</h2>
-    <div class="form-group"><label>টাস্ক *</label><input id="t-title"></div>
-    <div class="form-group"><label>প্রজেক্ট</label><select id="t-project"><option value="">Select</option></select></div>
-    <div class="form-group"><label>ডেডলাইন</label><input id="t-deadline" type="date"></div>
+    <h2>New Task</h2>
+    <div class="form-group"><label>Task *</label><input id="t-title"></div>
+    <div class="form-group"><label>Project</label><select id="t-project"><option value="">Select project</option></select></div>
+    <div class="form-group"><label>Deadline</label><input id="t-deadline" type="date"></div>
     <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('task-modal')">Cancel</button><button class="btn btn-primary" onclick="addTask()">Save</button></div>
   </div>
 </div>
 
 <div id="invoice-modal" class="modal-overlay">
   <div class="modal">
-    <h2>নতুন ইনভয়েস</h2>
-    <div class="form-group"><label>Client *</label><select id="i-client"><option value="">Select</option></select></div>
+    <h2>New Invoice</h2>
+    <div class="form-group"><label>Client *</label><select id="i-client"><option value="">Select client</option></select></div>
     <div style="margin-bottom:12px;">
-      <label style="display:block;font-size:13px;color:#555;margin-bottom:8px;font-weight:500;">কাজের বিবরণ *</label>
-      <table class="inv-items-table">
-        <thead><tr><th>বিবরণ</th><th style="width:80px">Qty</th><th style="width:90px">দর (টাকা)</th><th style="width:90px">Total</th><th style="width:30px"></th></tr></thead>
+      <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500;">Work Details *</label>
+      <table class="inv-items-tbl">
+        <thead><tr><th>Description</th><th style="width:70px">Qty</th><th style="width:90px">Rate (৳)</th><th style="width:90px">Total</th><th style="width:28px"></th></tr></thead>
         <tbody id="inv-items-body">
-          <tr><td><input placeholder="e.g. Logo Design" onchange="calcInvTotal()"></td><td><input type="number" value="1" onchange="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" onchange="calcInvTotal()"></td><td><input readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#e63946;cursor:pointer;font-size:16px;">✕</button></td></tr>
+          <tr><td><input placeholder="e.g. Logo Design" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent2);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td></tr>
         </tbody>
       </table>
       <button class="add-row-btn" onclick="addRow()">+ Add Row</button>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <div class="form-group" style="margin:0"><label>Total Bill</label><input id="i-total" readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></div>
-      <div class="form-group" style="margin:0"><label>Advance (টাকা)</label><input id="i-advance" type="number" placeholder="0" oninput="calcBalance()"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div class="form-group" style="margin:0"><label>Total Bill</label><input id="i-total" readonly style="color:var(--accent2);font-weight:500;"></div>
+      <div class="form-group" style="margin:0"><label>Advance (৳)</label><input id="i-advance" type="number" placeholder="0" oninput="calcBalance()"></div>
+      <div class="form-group" style="margin:0"><label>Due</label><input id="i-balance" readonly style="color:var(--red);font-weight:500;"></div>
     </div>
-    <div class="form-group"><label>Due</label><input id="i-balance" readonly style="background:#fff0f0;font-weight:600;color:#e63946"></div>
     <div class="form-group"><label>Due Date</label><input id="i-due" type="date"></div>
     <div class="form-group"><label>Note</label><input id="i-note" placeholder="Special instructions..."></div>
     <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('invoice-modal')">Cancel</button><button class="btn btn-primary" onclick="addInvoice()">Save</button></div>
@@ -312,232 +331,95 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,clients=[],projects=[],tasks=[],invoices=[];
 
 sb.auth.onAuthStateChange((event,session)=>{
-  if(session){currentUser=session.user;document.getElementById('auth-wrap').style.display='none';document.getElementById('app-wrap').style.display='block';document.getElementById('user-email').textContent='👤 '+session.user.email;loadAll();loadDivisions();loadSettings();}
+  if(session){currentUser=session.user;document.getElementById('auth-wrap').style.display='none';document.getElementById('app-wrap').style.display='block';document.getElementById('user-email').textContent=session.user.email;loadAll();loadDivisions();loadSettings();}
   else{currentUser=null;document.getElementById('auth-wrap').style.display='flex';document.getElementById('app-wrap').style.display='none';}
 });
 
-function switchTab(tab){document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(tab==='login'&&i===0)||(tab==='signup'&&i===1)));document.getElementById('login-form').style.display=tab==='login'?'block':'none';document.getElementById('signup-form').style.display=tab==='signup'?'block':'none';document.getElementById('auth-msg').className='auth-msg';}
-async function doLogin(){const email=document.getElementById('l-email').value.trim(),pass=document.getElementById('l-pass').value;if(!email||!pass)return showMsg('ইমেইল ও পাসওয়ার্ড দিন','error');const{error}=await sb.auth.signInWithPassword({email,password:pass});if(error)showMsg('ভুল ইমেইল বা পাসওয়ার্ড!','error');}
-async function doSignup(){const email=document.getElementById('s-email').value.trim(),pass=document.getElementById('s-pass').value;if(!email||!pass)return showMsg('সব তথ্য দিন','error');if(pass.length<6)return showMsg('পাসওয়ার্ড কমপক্ষে ৬ অক্ষর','error');const{error}=await sb.auth.signUp({email,password:pass});if(error)showMsg(error.message,'error');else showMsg('একাউন্ট তৈরি হয়েছে! লগইন করুন।','success');}
+function switchTab(t){document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(t==='login'&&i===0)||(t==='signup'&&i===1)));document.getElementById('login-form').style.display=t==='login'?'block':'none';document.getElementById('signup-form').style.display=t==='signup'?'block':'none';document.getElementById('auth-msg').className='auth-msg';}
+async function doLogin(){const e=document.getElementById('l-email').value.trim(),p=document.getElementById('l-pass').value;if(!e||!p)return showMsg('Enter email and password','error');const{error}=await sb.auth.signInWithPassword({email:e,password:p});if(error)showMsg('Wrong email or password!','error');}
+async function doSignup(){const e=document.getElementById('s-email').value.trim(),p=document.getElementById('s-pass').value;if(!e||!p)return showMsg('Fill all fields','error');if(p.length<6)return showMsg('Password min 6 characters','error');const{error}=await sb.auth.signUp({email:e,password:p});if(error)showMsg(error.message,'error');else showMsg('Account created! Please login.','success');}
 async function doLogout(){await sb.auth.signOut();}
-function showMsg(msg,type){const el=document.getElementById('auth-msg');el.textContent=msg;el.className='auth-msg '+type;}
+function showMsg(m,t){const el=document.getElementById('auth-msg');el.textContent=m;el.className='auth-msg '+t;}
 
-// LOGO
-function uploadLogo(input){
-  const file=input.files[0];if(!file)return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    localStorage.setItem('biz_logo',e.target.result);
-    document.getElementById('logo-preview').src=e.target.result;
-    document.getElementById('logo-preview').style.display='block';
-    document.getElementById('logo-placeholder').style.display='none';
-  };
-  reader.readAsDataURL(file);
-}
+function uploadLogo(input){const file=input.files[0];if(!file)return;const r=new FileReader();r.onload=e=>{localStorage.setItem('biz_logo',e.target.result);document.getElementById('logo-preview').src=e.target.result;document.getElementById('logo-preview').style.display='block';document.getElementById('logo-placeholder').style.display='none';};r.readAsDataURL(file);}
 
-// SETTINGS
-function saveSettings(){
-  const s={name:document.getElementById('biz-name').value,phone:document.getElementById('biz-phone').value,address:document.getElementById('biz-address').value,email:document.getElementById('biz-email').value,bkash:document.getElementById('biz-bkash').value,paymentNote:document.getElementById('biz-payment-note').value};
-  localStorage.setItem('biz_settings',JSON.stringify(s));
-  applySettings(s);
-  const saved=document.getElementById('settings-saved');saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);
-}
-function loadSettings(){
-  const s=JSON.parse(localStorage.getItem('biz_settings')||'{}');
-  if(s.name)document.getElementById('biz-name').value=s.name;
-  if(s.phone)document.getElementById('biz-phone').value=s.phone;
-  if(s.address)document.getElementById('biz-address').value=s.address;
-  if(s.email)document.getElementById('biz-email').value=s.email;
-  if(s.bkash)document.getElementById('biz-bkash').value=s.bkash;
-  if(s.paymentNote)document.getElementById('biz-payment-note').value=s.paymentNote;
-  applySettings(s);
-  const logo=localStorage.getItem('biz_logo');
-  if(logo){document.getElementById('logo-preview').src=logo;document.getElementById('logo-preview').style.display='block';document.getElementById('logo-placeholder').style.display='none';}
-}
-function applySettings(s){const name=s.name||'Design Manager';document.getElementById('sidebar-biz-name').textContent='🎨 '+name;document.getElementById('auth-title').textContent='🎨 '+name;document.title=name;}
-function getBizSettings(){return JSON.parse(localStorage.getItem('biz_settings')||'{}');}
+function saveSettings(){const s={name:document.getElementById('biz-name').value,phone:document.getElementById('biz-phone').value,address:document.getElementById('biz-address').value,email:document.getElementById('biz-email').value,bkash:document.getElementById('biz-bkash').value,paymentNote:document.getElementById('biz-payment-note').value};localStorage.setItem('biz_settings',JSON.stringify(s));applySettings(s);const saved=document.getElementById('settings-saved');saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000);}
+function loadSettings(){const s=JSON.parse(localStorage.getItem('biz_settings')||'{}');if(s.name)document.getElementById('biz-name').value=s.name;if(s.phone)document.getElementById('biz-phone').value=s.phone;if(s.address)document.getElementById('biz-address').value=s.address;if(s.email)document.getElementById('biz-email').value=s.email;if(s.bkash)document.getElementById('biz-bkash').value=s.bkash;if(s.paymentNote)document.getElementById('biz-payment-note').value=s.paymentNote;applySettings(s);const logo=localStorage.getItem('biz_logo');if(logo){document.getElementById('logo-preview').src=logo;document.getElementById('logo-preview').style.display='block';document.getElementById('logo-placeholder').style.display='none';}}
+function applySettings(s){const n=s.name||'Design Manager';document.getElementById('sidebar-biz-name').textContent=n;document.getElementById('auth-title').textContent=n;document.title=n;}
+function getBiz(){return JSON.parse(localStorage.getItem('biz_settings')||'{}');}
 
-// INVOICE ITEMS
-function addRow(){
-  const tbody=document.getElementById('inv-items-body');
-  const tr=document.createElement('tr');
-  tr.innerHTML=`<td><input placeholder="বিবরণ" onchange="calcInvTotal()"></td><td><input type="number" value="1" onchange="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" onchange="calcInvTotal()"></td><td><input readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#e63946;cursor:pointer;font-size:16px;">✕</button></td>`;
-  tbody.appendChild(tr);
-}
+function addRow(){const tb=document.getElementById('inv-items-body');const tr=document.createElement('tr');tr.innerHTML=`<td><input placeholder="Description" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent2);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td>`;tb.appendChild(tr);}
 function removeRow(btn){const rows=document.querySelectorAll('#inv-items-body tr');if(rows.length>1){btn.closest('tr').remove();calcInvTotal();}}
-function calcInvTotal(){
-  let total=0;
-  document.querySelectorAll('#inv-items-body tr').forEach(tr=>{
-    const inputs=tr.querySelectorAll('input');
-    const qty=parseFloat(inputs[1].value)||0;
-    const rate=parseFloat(inputs[2].value)||0;
-    const rowTotal=qty*rate;
-    inputs[3].value=rowTotal>0?'৳ '+rowTotal.toLocaleString():'';
-    total+=rowTotal;
-  });
-  document.getElementById('i-total').value=total>0?'৳ '+total.toLocaleString():'';
-  calcBalance();
-  return total;
-}
-function calcBalance(){
-  const rows=document.querySelectorAll('#inv-items-body tr');
-  let total=0;
-  rows.forEach(tr=>{const inputs=tr.querySelectorAll('input');total+=(parseFloat(inputs[1].value)||0)*(parseFloat(inputs[2].value)||0);});
-  const advance=parseFloat(document.getElementById('i-advance').value)||0;
-  const balance=total-advance;
-  document.getElementById('i-balance').value=balance>=0?'৳ '+balance.toLocaleString():'৳ 0';
-}
+function calcInvTotal(){let t=0;document.querySelectorAll('#inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');const q=parseFloat(inp[1].value)||0,r=parseFloat(inp[2].value)||0,rt=q*r;inp[3].value=rt>0?'৳ '+rt.toLocaleString():'';t+=rt;});document.getElementById('i-total').value=t>0?'৳ '+t.toLocaleString():'';calcBalance();return t;}
+function calcBalance(){let t=0;document.querySelectorAll('#inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');t+=(parseFloat(inp[1].value)||0)*(parseFloat(inp[2].value)||0);});const adv=parseFloat(document.getElementById('i-advance').value)||0;document.getElementById('i-balance').value='৳ '+Math.max(0,t-adv).toLocaleString();}
 
-// CALCULATOR
-function calculate(){
-  const income=parseFloat(document.getElementById('total-income').value)||0,expense=parseFloat(document.getElementById('total-expense').value)||0,profit=income-expense;
-  const p1=parseFloat(document.getElementById('pct1').value)||0,p2=parseFloat(document.getElementById('pct2').value)||0,p3=parseFloat(document.getElementById('pct3').value)||0,total=p1+p2+p3;
-  document.getElementById('pct-total').textContent=total;
-  document.getElementById('pct-warning').style.display=total!==100?'block':'none';
-  document.getElementById('net-profit').textContent='৳ '+Math.round(profit).toLocaleString();
-  document.getElementById('amt1').textContent='৳ '+Math.round(profit*p1/100).toLocaleString();
-  document.getElementById('amt2').textContent='৳ '+Math.round(profit*p2/100).toLocaleString();
-  document.getElementById('amt3').textContent='৳ '+Math.round(profit*p3/100).toLocaleString();
-}
+function calculate(){const inc=parseFloat(document.getElementById('total-income').value)||0,exp=parseFloat(document.getElementById('total-expense').value)||0,profit=inc-exp;const p1=parseFloat(document.getElementById('pct1').value)||0,p2=parseFloat(document.getElementById('pct2').value)||0,p3=parseFloat(document.getElementById('pct3').value)||0,tot=p1+p2+p3;document.getElementById('pct-total').textContent=tot;document.getElementById('pct-warning').style.display=tot!==100?'block':'none';document.getElementById('net-profit').textContent='৳ '+Math.round(profit).toLocaleString();document.getElementById('amt1').textContent='৳ '+Math.round(profit*p1/100).toLocaleString();document.getElementById('amt2').textContent='৳ '+Math.round(profit*p2/100).toLocaleString();document.getElementById('amt3').textContent='৳ '+Math.round(profit*p3/100).toLocaleString();}
 function saveDivisions(){localStorage.setItem('div_name1',document.getElementById('name1').value);localStorage.setItem('div_name2',document.getElementById('name2').value);localStorage.setItem('div_name3',document.getElementById('name3').value);}
 function loadDivisions(){document.getElementById('name1').value=localStorage.getItem('div_name1')||'';document.getElementById('name2').value=localStorage.getItem('div_name2')||'';document.getElementById('name3').value=localStorage.getItem('div_name3')||'';}
 
-// DATA
-async function loadAll(){
-  if(!currentUser)return;
-  const uid=currentUser.id;
-  const[c,p,t,i]=await Promise.all([sb.from('clients').select('*').eq('user_id',uid).order('created_at',{ascending:false}),sb.from('projects').select('*').eq('user_id',uid).order('created_at',{ascending:false}),sb.from('tasks').select('*').eq('user_id',uid).order('created_at',{ascending:false}),sb.from('invoices').select('*').eq('user_id',uid).order('created_at',{ascending:false})]);
-  clients=c.data||[];projects=p.data||[];tasks=t.data||[];invoices=i.data||[];renderAll();
-}
+async function loadAll(){if(!currentUser)return;const uid=currentUser.id;const[c,p,t,i]=await Promise.all([sb.from('clients').select('*').eq('user_id',uid).order('created_at',{ascending:false}),sb.from('projects').select('*').eq('user_id',uid).order('created_at',{ascending:false}),sb.from('tasks').select('*').eq('user_id',uid).order('created_at',{ascending:false}),sb.from('invoices').select('*').eq('user_id',uid).order('created_at',{ascending:false})]);clients=c.data||[];projects=p.data||[];tasks=t.data||[];invoices=i.data||[];renderAll();}
 
-function renderAll(){
-  document.getElementById('s-clients').textContent=clients.length;
-  document.getElementById('s-projects').textContent=projects.filter(p=>p.status==='active').length;
-  document.getElementById('s-tasks').textContent=tasks.filter(t=>!t.is_done).length;
-  const unpaid=invoices.filter(i=>i.status==='unpaid').reduce((s,i)=>s+Number(i.amount),0);
-  document.getElementById('s-invoices').textContent='৳'+unpaid.toLocaleString();
-  renderClients();renderProjects();renderTasks();renderInvoices();populateSelects();
-}
+function renderAll(){document.getElementById('s-clients').textContent=clients.length;document.getElementById('s-projects').textContent=projects.filter(p=>p.status==='active').length;document.getElementById('s-tasks').textContent=tasks.filter(t=>!t.is_done).length;const unpaid=invoices.reduce((s,i)=>{const adv=Number(i.advance||0);const tot=Number(i.amount||0);return s+(i.status!=='paid'?Math.max(0,tot-adv):0);},0);document.getElementById('s-invoices').textContent='৳'+unpaid.toLocaleString();renderClients();renderProjects();renderTasks();renderInvoices();populateSelects();}
 
-function renderClients(){const tb=document.getElementById('clients-table');if(!clients.length){tb.innerHTML='<tr><td colspan="4" class="empty">কোনো ক্লায়েন্ট নেই</td></tr>';return;}tb.innerHTML=clients.map(c=>`<tr><td>${c.name}</td><td>${c.email||'-'}</td><td>${c.phone||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('clients','${c.id}')">মুছুন</button></td></tr>`).join('');}
+function renderClients(){const tb=document.getElementById('clients-table');if(!clients.length){tb.innerHTML='<tr><td colspan="4" class="empty">No clients yet</td></tr>';return;}tb.innerHTML=clients.map(c=>`<tr><td>${c.name}</td><td>${c.email||'-'}</td><td>${c.phone||'-'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('clients','${c.id}')">Delete</button></td></tr>`).join('');}
 
-function renderProjects(){const tb=document.getElementById('projects-table');if(!projects.length){tb.innerHTML='<tr><td colspan="6" class="empty">কোনো প্রজেক্ট নেই</td></tr>';return;}tb.innerHTML=projects.map(p=>{const cl=clients.find(c=>c.id===p.client_id);const badge=p.status==='active'?'badge-active':p.status==='completed'?'badge-completed':'badge-hold';const label=p.status==='active'?'চলমান':p.status==='completed'?'সম্পন্ন':'বিরতি';return`<tr><td>${p.title}</td><td>${cl?cl.name:'-'}</td><td>৳${Number(p.budget||0).toLocaleString()}</td><td>${p.deadline||'-'}</td><td><span class="badge ${badge}">${label}</span></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('projects','${p.id}')">মুছুন</button></td></tr>`;}).join('');}
+function renderProjects(){const tb=document.getElementById('projects-table');if(!projects.length){tb.innerHTML='<tr><td colspan="6" class="empty">No projects yet</td></tr>';return;}tb.innerHTML=projects.map(p=>{const cl=clients.find(c=>c.id===p.client_id);const badge=p.status==='active'?'badge-active':p.status==='completed'?'badge-completed':'badge-hold';const label=p.status==='active'?'Active':p.status==='completed'?'Completed':'On Hold';return`<tr><td>${p.title}</td><td>${cl?cl.name:'-'}</td><td>৳${Number(p.budget||0).toLocaleString()}</td><td>${p.deadline||'-'}</td><td><span class="badge ${badge}">${label}</span></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('projects','${p.id}')">Delete</button></td></tr>`;}).join('');}
 
-function renderTasks(){const tb=document.getElementById('tasks-table');if(!tasks.length){tb.innerHTML='<tr><td colspan="5" class="empty">কোনো টাস্ক নেই</td></tr>';return;}tb.innerHTML=tasks.map(t=>{const pr=projects.find(p=>p.id===t.project_id);return`<tr><td style="text-decoration:${t.is_done?'line-through':'none'};color:${t.is_done?'#aaa':''}">${t.title}</td><td>${pr?pr.title:'-'}</td><td>${t.deadline||'-'}</td><td><input type="checkbox" ${t.is_done?'checked':''} onchange="toggleTask('${t.id}',this.checked)"></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('tasks','${t.id}')">মুছুন</button></td></tr>`;}).join('');}
+function renderTasks(){const tb=document.getElementById('tasks-table');if(!tasks.length){tb.innerHTML='<tr><td colspan="5" class="empty">No tasks yet</td></tr>';return;}tb.innerHTML=tasks.map(t=>{const pr=projects.find(p=>p.id===t.project_id);return`<tr><td style="text-decoration:${t.is_done?'line-through':'none'};color:${t.is_done?'var(--text3)':'var(--text)'}">${t.title}</td><td>${pr?pr.title:'-'}</td><td>${t.deadline||'-'}</td><td><input type="checkbox" ${t.is_done?'checked':''} onchange="toggleTask('${t.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)"></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('tasks','${t.id}')">Delete</button></td></tr>`;}).join('');}
 
-function renderInvoices(){
-  const tb=document.getElementById('invoices-table');
-  if(!invoices.length){tb.innerHTML='<tr><td colspan="7" class="empty">কোনো ইনভয়েস নেই</td></tr>';return;}
-  tb.innerHTML=invoices.map((inv,idx)=>{
-    const cl=clients.find(c=>c.id===inv.client_id);
-    const advance=Number(inv.advance||0);
-    const total=Number(inv.amount||0);
-    const balance=total-advance;
-    const badge=inv.status==='paid'?'badge-paid':advance>0?'badge-partial':'badge-unpaid';
-    const label=inv.status==='paid'?'পেইড':advance>0?'আংশিক':'Due';
-    const invNum='INV-'+String(invoices.length-idx).padStart(4,'0');
-    return`<tr><td>${invNum}</td><td>${cl?cl.name:'-'}</td><td>৳${total.toLocaleString()}</td><td>৳${advance.toLocaleString()}</td><td style="color:#e63946;font-weight:600">৳${balance.toLocaleString()}</td><td><span class="badge ${badge}">${label}</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-success btn-sm" onclick="printInvoice('${inv.id}',${idx})">🖨️</button>${inv.status!=='paid'?`<button class="btn btn-primary btn-sm" onclick="markPaid('${inv.id}')">Paid</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${inv.id}')">✕</button></td></tr>`;
-  }).join('');
-}
+function renderInvoices(){const tb=document.getElementById('invoices-table');if(!invoices.length){tb.innerHTML='<tr><td colspan="7" class="empty">No invoices yet</td></tr>';return;}tb.innerHTML=invoices.map((inv,idx)=>{const cl=clients.find(c=>c.id===inv.client_id);const adv=Number(inv.advance||0);const tot=Number(inv.amount||0);const bal=Math.max(0,tot-adv);const badge=inv.status==='paid'?'badge-paid':adv>0?'badge-partial':'badge-unpaid';const label=inv.status==='paid'?'Paid':adv>0?'Partial':'Unpaid';const invNum='INV-'+String(invoices.length-idx).padStart(4,'0');return`<tr><td>${invNum}</td><td>${cl?cl.name:'-'}</td><td>৳${tot.toLocaleString()}</td><td style="color:var(--green)">৳${adv.toLocaleString()}</td><td style="color:var(--red);font-weight:500">৳${bal.toLocaleString()}</td><td><span class="badge ${badge}">${label}</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-success btn-sm" onclick="printInvoice('${inv.id}',${idx})">🖨️</button>${inv.status!=='paid'?`<button class="btn btn-primary btn-sm" onclick="markPaid('${inv.id}')">Paid</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${inv.id}')">✕</button></td></tr>`;}).join('');}
 
-function populateSelects(){
-  const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  document.getElementById('p-client').innerHTML='<option value="">Select</option>'+opts;
-  document.getElementById('i-client').innerHTML='<option value="">Select</option>'+opts;
-  const popts=projects.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');
-  document.getElementById('t-project').innerHTML='<option value="">Select</option>'+popts;
-}
+function populateSelects(){const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');document.getElementById('p-client').innerHTML='<option value="">Select client</option>'+opts;document.getElementById('i-client').innerHTML='<option value="">Select client</option>'+opts;const popts=projects.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');document.getElementById('t-project').innerHTML='<option value="">Select project</option>'+popts;}
 
-// PRINT INVOICE
 function printInvoice(id,idx){
   const inv=invoices.find(i=>i.id===id);if(!inv)return;
   const cl=clients.find(c=>c.id===inv.client_id);
-  const biz=getBizSettings();
-  const logo=localStorage.getItem('biz_logo');
+  const biz=getBiz();const logo=localStorage.getItem('biz_logo');
   const invNum='INV-'+String(invoices.length-idx).padStart(4,'0');
-  const today=new Date().toLocaleDateString('bn-BD');
+  const today=new Date().toLocaleDateString('en-GB');
   const items=inv.items?JSON.parse(inv.items):[];
-  const advance=Number(inv.advance||0);
-  const total=Number(inv.amount||0);
-  const balance=total-advance;
-
-  let itemsHTML=items.length>0?items.map((item,i)=>`<tr><td style="padding:10px 14px">${i+1}</td><td style="padding:10px 14px">${item.desc||'-'}</td><td style="padding:10px 14px;text-align:center">${item.qty||1}</td><td style="padding:10px 14px;text-align:right">৳${Number(item.rate||0).toLocaleString()}</td><td style="padding:10px 14px;text-align:right;font-weight:600">৳${Number(item.total||0).toLocaleString()}</td></tr>`).join(''):`<tr><td style="padding:10px 14px">১</td><td style="padding:10px 14px">${inv.description||inv.note||'ডিজাইন সার্ভিস'}</td><td style="padding:10px 14px;text-align:center">১</td><td style="padding:10px 14px;text-align:right">৳${total.toLocaleString()}</td><td style="padding:10px 14px;text-align:right;font-weight:600">৳${total.toLocaleString()}</td></tr>`;
-
-  const html=`<div style="padding:40px;max-width:720px;margin:0 auto;font-family:'Segoe UI',sans-serif;background:#fff;">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #4361ee;">
-      <div>
-        ${logo?`<img src="${logo}" style="max-height:70px;max-width:180px;margin-bottom:8px;display:block;">`:''}
-        <div style="font-size:22px;font-weight:700;color:#1a1a2e;">${biz.name||'আপনার প্রতিষ্ঠান'}</div>
-        <div style="font-size:13px;color:#555;line-height:1.8;margin-top:4px;">
-          ${biz.address?biz.address+'<br>':''}
-          ${biz.phone?'Phone: '+biz.phone+'<br>':''}
-          ${biz.email?'Email: '+biz.email:''}
-        </div>
+  const adv=Number(inv.advance||0);const tot=Number(inv.amount||0);const bal=Math.max(0,tot-adv);
+  let itemsHTML=items.length>0?items.map((item,i)=>`<tr><td style="padding:10px 14px;border-bottom:1px solid #f0f0f0">${i+1}</td><td style="padding:10px 14px;border-bottom:1px solid #f0f0f0">${item.desc||'-'}</td><td style="padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align:center">${item.qty||1}</td><td style="padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align:right">৳${Number(item.rate||0).toLocaleString()}</td><td style="padding:10px 14px;border-bottom:1px solid #f0f0f0;text-align:right;font-weight:600">৳${Number(item.total||0).toLocaleString()}</td></tr>`).join(''):`<tr><td style="padding:10px 14px">1</td><td style="padding:10px 14px">${inv.description||inv.note||'Design Service'}</td><td style="padding:10px 14px;text-align:center">1</td><td style="padding:10px 14px;text-align:right">৳${tot.toLocaleString()}</td><td style="padding:10px 14px;text-align:right;font-weight:600">৳${tot.toLocaleString()}</td></tr>`;
+  const html=`<div style="padding:40px;max-width:720px;margin:0 auto;font-family:'Segoe UI',sans-serif;background:#fff;color:#1a1a2e;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:3px solid #6c63ff;">
+      <div>${logo?`<img src="${logo}" style="max-height:70px;max-width:180px;margin-bottom:8px;display:block;">`:''}
+        <div style="font-size:22px;font-weight:700;">${biz.name||'Your Business'}</div>
+        <div style="font-size:13px;color:#555;line-height:1.8;margin-top:4px;">${biz.address?'Address: '+biz.address+'<br>':''}${biz.phone?'Phone: '+biz.phone+'<br>':''}${biz.email?'Email: '+biz.email:''}</div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:32px;font-weight:700;color:#4361ee;">INVOICE</div>
+        <div style="font-size:32px;font-weight:700;color:#6c63ff;">INVOICE</div>
         <div style="font-size:13px;color:#888;margin-top:4px;">${invNum}</div>
         <div style="font-size:13px;color:#888;">Date: ${today}</div>
         ${inv.due_date?`<div style="font-size:13px;color:#888;">Due Date: ${inv.due_date}</div>`:''}
       </div>
     </div>
     <div style="margin-bottom:28px;">
-      <div style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;margin-bottom:8px;">Bill To</div>
-      <div style="font-size:16px;font-weight:700;color:#1a1a2e;">${cl?cl.name:'ক্লায়েন্ট'}</div>
-      <div style="font-size:13px;color:#555;line-height:1.7;margin-top:4px;">
-        ${cl&&cl.phone?'Phone: '+cl.phone+'<br>':''}
-        ${cl&&cl.email?'Email: '+cl.email+'<br>':''}
-        ${cl&&cl.address?cl.address:''}
-      </div>
+      <div style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;margin-bottom:8px;letter-spacing:0.5px;">Bill To</div>
+      <div style="font-size:16px;font-weight:700;">${cl?cl.name:'Client'}</div>
+      <div style="font-size:13px;color:#555;line-height:1.8;margin-top:4px;">${cl&&cl.phone?'Phone: '+cl.phone+'<br>':''}${cl&&cl.email?'Email: '+cl.email+'<br>':''}${cl&&cl.address?cl.address:''}</div>
     </div>
     <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
-      <thead><tr style="background:#f4f6fb;"><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;">#</th><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;">Description</th><th style="padding:10px 14px;text-align:center;font-size:12px;color:#555;">Qty</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;">Rate</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;">Total</th></tr></thead>
-      <tbody style="border:1px solid #f0f0f0;">${itemsHTML}</tbody>
+      <thead><tr style="background:#f8f9fa;"><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;font-weight:600;">#</th><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;font-weight:600;">Description</th><th style="padding:10px 14px;text-align:center;font-size:12px;color:#555;font-weight:600;">Qty</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;font-weight:600;">Rate</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;font-weight:600;">Total</th></tr></thead>
+      <tbody>${itemsHTML}</tbody>
     </table>
     <div style="display:flex;justify-content:flex-end;margin-bottom:24px;">
-      <div style="background:#f4f6fb;border-radius:10px;padding:16px 24px;min-width:240px;">
-        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Total Bill</span><span style="font-weight:600;">৳ ${total.toLocaleString()}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Advance</span><span style="font-weight:600;color:#065f46;">৳ ${advance.toLocaleString()}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:32px;font-size:16px;font-weight:700;color:#e63946;padding-top:8px;border-top:2px solid #e63946;margin-top:4px;"><span>Due</span><span>৳ ${balance.toLocaleString()}</span></div>
+      <div style="background:#f8f9fa;border-radius:10px;padding:16px 24px;min-width:240px;">
+        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Total Bill</span><span style="font-weight:600;">৳ ${tot.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Advance</span><span style="font-weight:600;color:#1D9E75;">৳ ${adv.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:32px;font-size:16px;font-weight:700;color:#E24B4A;padding-top:10px;border-top:2px solid #E24B4A;margin-top:4px;"><span>Due</span><span>৳ ${bal.toLocaleString()}</span></div>
       </div>
     </div>
-    ${biz.bkash||biz.paymentNote?`<div style="background:#f0f7ff;border-radius:10px;padding:16px;margin-bottom:24px;"><div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:8px;">💳 Payment Info</div><div style="font-size:13px;color:#555;line-height:1.8;">${biz.bkash?'bKash/Nagad: '+biz.bkash+'<br>':''}${biz.paymentNote||''}</div></div>`:''}
+    ${biz.bkash||biz.paymentNote?`<div style="background:#f0f7ff;border-radius:10px;padding:16px;margin-bottom:24px;"><div style="font-size:13px;font-weight:600;margin-bottom:8px;">Payment Info</div><div style="font-size:13px;color:#555;line-height:1.8;">${biz.bkash?'bKash/Nagad: '+biz.bkash+'<br>':''}${biz.paymentNote||''}</div></div>`:''}
     <div style="text-align:center;font-size:12px;color:#888;border-top:1px solid #eee;padding-top:16px;">Thank you for your business • ${biz.name||''}</div>
   </div>`;
-
-  const printDiv=document.getElementById('invoice-print');
-  printDiv.innerHTML=html;printDiv.style.display='block';
-  window.print();
-  setTimeout(()=>{printDiv.style.display='none';},1000);
+  const pd=document.getElementById('invoice-print');pd.innerHTML=html;pd.style.display='block';window.print();setTimeout(()=>{pd.style.display='none';},1000);
 }
 
-async function addClient(){const name=document.getElementById('c-name').value.trim();if(!name)return alert('নাম দিন');await sb.from('clients').insert({user_id:currentUser.id,name,email:document.getElementById('c-email').value,phone:document.getElementById('c-phone').value,address:document.getElementById('c-address').value,notes:document.getElementById('c-notes').value});closeModal('client-modal');loadAll();}
-
-async function addProject(){const title=document.getElementById('p-title').value.trim(),client_id=document.getElementById('p-client').value;if(!title||!client_id)return alert('নাম ও ক্লায়েন্ট দিন');await sb.from('projects').insert({user_id:currentUser.id,title,client_id,budget:document.getElementById('p-budget').value,deadline:document.getElementById('p-deadline').value});closeModal('project-modal');loadAll();}
-
-async function addTask(){const title=document.getElementById('t-title').value.trim();if(!title)return alert('টাস্ক লিখুন');await sb.from('tasks').insert({user_id:currentUser.id,title,project_id:document.getElementById('t-project').value||null,deadline:document.getElementById('t-deadline').value});closeModal('task-modal');loadAll();}
-
-async function addInvoice(){
-  const client_id=document.getElementById('i-client').value;
-  if(!client_id)return alert('ক্লায়েন্ট Select');
-  const items=[];
-  let total=0;
-  document.querySelectorAll('#inv-items-body tr').forEach(tr=>{
-    const inputs=tr.querySelectorAll('input');
-    const desc=inputs[0].value;const qty=parseFloat(inputs[1].value)||0;const rate=parseFloat(inputs[2].value)||0;const rowTotal=qty*rate;
-    if(desc||rate>0){items.push({desc,qty,rate,total:rowTotal});total+=rowTotal;}
-  });
-  if(!total)return alert('কাজের বিবরণ ও দর দিন');
-  const advance=parseFloat(document.getElementById('i-advance').value)||0;
-  const status=advance>=total?'paid':advance>0?'partial':'unpaid';
-  await sb.from('invoices').insert({user_id:currentUser.id,client_id,amount:total,advance,status,items:JSON.stringify(items),due_date:document.getElementById('i-due').value,note:document.getElementById('i-note').value});
-  closeModal('invoice-modal');
-  document.getElementById('inv-items-body').innerHTML=`<tr><td><input placeholder="e.g. Logo Design" onchange="calcInvTotal()"></td><td><input type="number" value="1" onchange="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" onchange="calcInvTotal()"></td><td><input readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#e63946;cursor:pointer;font-size:16px;">✕</button></td></tr>`;
-  document.getElementById('i-advance').value='';document.getElementById('i-total').value='';document.getElementById('i-balance').value='';
-  loadAll();
-}
-
-async function deleteItem(table,id){if(!confirm('মুছে ফেলবেন?'))return;await sb.from(table).delete().eq('id',id);loadAll();}
+async function addClient(){const name=document.getElementById('c-name').value.trim();if(!name)return alert('Enter name');await sb.from('clients').insert({user_id:currentUser.id,name,email:document.getElementById('c-email').value,phone:document.getElementById('c-phone').value,address:document.getElementById('c-address').value,notes:document.getElementById('c-notes').value});closeModal('client-modal');loadAll();}
+async function addProject(){const title=document.getElementById('p-title').value.trim(),client_id=document.getElementById('p-client').value;if(!title||!client_id)return alert('Enter name and client');await sb.from('projects').insert({user_id:currentUser.id,title,client_id,budget:document.getElementById('p-budget').value,deadline:document.getElementById('p-deadline').value});closeModal('project-modal');loadAll();}
+async function addTask(){const title=document.getElementById('t-title').value.trim();if(!title)return alert('Enter task');await sb.from('tasks').insert({user_id:currentUser.id,title,project_id:document.getElementById('t-project').value||null,deadline:document.getElementById('t-deadline').value});closeModal('task-modal');loadAll();}
+async function addInvoice(){const client_id=document.getElementById('i-client').value;if(!client_id)return alert('Select client');const items=[];let total=0;document.querySelectorAll('#inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');const desc=inp[0].value,qty=parseFloat(inp[1].value)||0,rate=parseFloat(inp[2].value)||0,rt=qty*rate;if(desc||rate>0){items.push({desc,qty,rate,total:rt});total+=rt;}});if(!total)return alert('Add work description and rate');const advance=parseFloat(document.getElementById('i-advance').value)||0;const status=advance>=total?'paid':advance>0?'partial':'unpaid';await sb.from('invoices').insert({user_id:currentUser.id,client_id,amount:total,advance,status,items:JSON.stringify(items),due_date:document.getElementById('i-due').value,note:document.getElementById('i-note').value});closeModal('invoice-modal');document.getElementById('inv-items-body').innerHTML=`<tr><td><input placeholder="e.g. Logo Design" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent2);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td></tr>`;document.getElementById('i-advance').value='';document.getElementById('i-total').value='';document.getElementById('i-balance').value='';loadAll();}
+async function deleteItem(table,id){if(!confirm('Delete this?'))return;await sb.from(table).delete().eq('id',id);loadAll();}
 async function toggleTask(id,done){await sb.from('tasks').update({is_done:done}).eq('id',id);loadAll();}
 async function markPaid(id){await sb.from('invoices').update({status:'paid'}).eq('id',id);loadAll();}
 function showPage(id,e){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');e.currentTarget.classList.add('active');}
