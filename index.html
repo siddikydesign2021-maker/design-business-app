@@ -151,7 +151,7 @@
     <div class="nav-item" onclick="showPage('clients',event)"><span>👥</span><span class="label">ক্লায়েন্ট</span></div>
     <div class="nav-item" onclick="showPage('projects',event)"><span>📁</span><span class="label">প্রজেক্ট</span></div>
     <div class="nav-item" onclick="showPage('tasks',event)"><span>✅</span><span class="label">টাস্ক</span></div>
-    <div class="nav-item" onclick="showPage('invoices',event)"><span>🧾</span><span class="label">ইনভয়েস</span></div>
+    <div class="nav-item" onclick="showPage('invoices',event)"><span>🧾</span><span class="label">INVOICE</span></div>
     <div class="nav-item" onclick="showPage('settings',event)"><span>⚙️</span><span class="label">সেটিংস</span></div>
     <button class="logout-btn" onclick="doLogout()">🚪 লগআউট</button>
   </div>
@@ -162,7 +162,7 @@
       <div class="stats">
         <div class="stat-card blue"><div class="stat-label">মোট ক্লায়েন্ট</div><div class="stat-value" id="s-clients">0</div></div>
         <div class="stat-card green"><div class="stat-label">চলমান প্রজেক্ট</div><div class="stat-value" id="s-projects">0</div></div>
-        <div class="stat-card orange"><div class="stat-label">বাকি টাস্ক</div><div class="stat-value" id="s-tasks">0</div></div>
+        <div class="stat-card orange"><div class="stat-label">Due টাস্ক</div><div class="stat-value" id="s-tasks">0</div></div>
         <div class="stat-card red"><div class="stat-label">বকেয়া পেমেন্ট</div><div class="stat-value" id="s-invoices">৳0</div></div>
       </div>
       <div class="calc-card">
@@ -185,7 +185,7 @@
       <h1>ক্লায়েন্ট</h1>
       <div class="card">
         <div class="card-header"><span class="card-title">সকল ক্লায়েন্ট</span><button class="btn btn-primary" onclick="openModal('client-modal')">+ নতুন ক্লায়েন্ট</button></div>
-        <table><thead><tr><th>নাম</th><th>ইমেইল</th><th>ফোন</th><th>একশন</th></tr></thead>
+        <table><thead><tr><th>নাম</th><th>ইমেইল</th><th>ফোন</th><th>Action</th></tr></thead>
         <tbody id="clients-table"></tbody></table>
       </div>
     </div>
@@ -194,7 +194,7 @@
       <h1>প্রজেক্ট</h1>
       <div class="card">
         <div class="card-header"><span class="card-title">সকল প্রজেক্ট</span><button class="btn btn-primary" onclick="openModal('project-modal')">+ নতুন প্রজেক্ট</button></div>
-        <table><thead><tr><th>নাম</th><th>ক্লায়েন্ট</th><th>বাজেট</th><th>ডেডলাইন</th><th>স্ট্যাটাস</th><th>একশন</th></tr></thead>
+        <table><thead><tr><th>নাম</th><th>ক্লায়েন্ট</th><th>বাজেট</th><th>ডেডলাইন</th><th>Status</th><th>Action</th></tr></thead>
         <tbody id="projects-table"></tbody></table>
       </div>
     </div>
@@ -203,16 +203,16 @@
       <h1>টাস্ক</h1>
       <div class="card">
         <div class="card-header"><span class="card-title">সকল টাস্ক</span><button class="btn btn-primary" onclick="openModal('task-modal')">+ নতুন টাস্ক</button></div>
-        <table><thead><tr><th>টাস্ক</th><th>প্রজেক্ট</th><th>ডেডলাইন</th><th>সম্পন্ন</th><th>একশন</th></tr></thead>
+        <table><thead><tr><th>টাস্ক</th><th>প্রজেক্ট</th><th>ডেডলাইন</th><th>সম্পন্ন</th><th>Action</th></tr></thead>
         <tbody id="tasks-table"></tbody></table>
       </div>
     </div>
 
     <div id="invoices" class="page">
-      <h1>ইনভয়েস</h1>
+      <h1>INVOICE</h1>
       <div class="card">
         <div class="card-header"><span class="card-title">সকল ইনভয়েস</span><button class="btn btn-primary" onclick="openModal('invoice-modal')">+ নতুন ইনভয়েস</button></div>
-        <table><thead><tr><th>ইনভয়েস #</th><th>ক্লায়েন্ট</th><th>মোট বিল</th><th>অগ্রিম</th><th>বাকি</th><th>স্ট্যাটাস</th><th>একশন</th></tr></thead>
+        <table><thead><tr><th>Invoice #</th><th>ক্লায়েন্ট</th><th>Total Bill</th><th>Advance</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
         <tbody id="invoices-table"></tbody></table>
       </div>
     </div>
@@ -237,7 +237,7 @@
           <div class="form-group"><label>বিকাশ/নগদ নম্বর</label><input id="biz-bkash" placeholder="01XXXXXXXXX"></div>
           <div class="form-group"><label>পেমেন্ট নির্দেশনা</label><input id="biz-payment-note" placeholder="যেমন: বিকাশে পেমেন্ট করুন"></div>
         </div>
-        <button class="btn btn-primary" onclick="saveSettings()">সেভ করুন ✓</button>
+        <button class="btn btn-primary" onclick="saveSettings()">Save ✓</button>
         <span id="settings-saved" style="margin-left:12px;color:#065f46;font-size:13px;display:none;">সেভ হয়েছে ✓</span>
       </div>
     </div>
@@ -254,8 +254,8 @@
     <div class="form-group"><label>ইমেইল</label><input id="c-email" type="email"></div>
     <div class="form-group"><label>ফোন</label><input id="c-phone"></div>
     <div class="form-group"><label>ঠিকানা</label><input id="c-address"></div>
-    <div class="form-group"><label>নোট</label><textarea id="c-notes" rows="2"></textarea></div>
-    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('client-modal')">বাতিল</button><button class="btn btn-primary" onclick="addClient()">সেভ করুন</button></div>
+    <div class="form-group"><label>Note</label><textarea id="c-notes" rows="2"></textarea></div>
+    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('client-modal')">Cancel</button><button class="btn btn-primary" onclick="addClient()">Save</button></div>
   </div>
 </div>
 
@@ -263,10 +263,10 @@
   <div class="modal">
     <h2>নতুন প্রজেক্ট</h2>
     <div class="form-group"><label>নাম *</label><input id="p-title"></div>
-    <div class="form-group"><label>ক্লায়েন্ট *</label><select id="p-client"><option value="">বেছে নিন</option></select></div>
+    <div class="form-group"><label>Client *</label><select id="p-client"><option value="">Select</option></select></div>
     <div class="form-group"><label>বাজেট (টাকা)</label><input id="p-budget" type="number"></div>
     <div class="form-group"><label>ডেডলাইন</label><input id="p-deadline" type="date"></div>
-    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('project-modal')">বাতিল</button><button class="btn btn-primary" onclick="addProject()">সেভ করুন</button></div>
+    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('project-modal')">Cancel</button><button class="btn btn-primary" onclick="addProject()">Save</button></div>
   </div>
 </div>
 
@@ -274,34 +274,34 @@
   <div class="modal">
     <h2>নতুন টাস্ক</h2>
     <div class="form-group"><label>টাস্ক *</label><input id="t-title"></div>
-    <div class="form-group"><label>প্রজেক্ট</label><select id="t-project"><option value="">বেছে নিন</option></select></div>
+    <div class="form-group"><label>প্রজেক্ট</label><select id="t-project"><option value="">Select</option></select></div>
     <div class="form-group"><label>ডেডলাইন</label><input id="t-deadline" type="date"></div>
-    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('task-modal')">বাতিল</button><button class="btn btn-primary" onclick="addTask()">সেভ করুন</button></div>
+    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('task-modal')">Cancel</button><button class="btn btn-primary" onclick="addTask()">Save</button></div>
   </div>
 </div>
 
 <div id="invoice-modal" class="modal-overlay">
   <div class="modal">
     <h2>নতুন ইনভয়েস</h2>
-    <div class="form-group"><label>ক্লায়েন্ট *</label><select id="i-client"><option value="">বেছে নিন</option></select></div>
+    <div class="form-group"><label>Client *</label><select id="i-client"><option value="">Select</option></select></div>
     <div style="margin-bottom:12px;">
       <label style="display:block;font-size:13px;color:#555;margin-bottom:8px;font-weight:500;">কাজের বিবরণ *</label>
       <table class="inv-items-table">
-        <thead><tr><th>বিবরণ</th><th style="width:80px">পরিমাণ</th><th style="width:90px">দর (টাকা)</th><th style="width:90px">মোট</th><th style="width:30px"></th></tr></thead>
+        <thead><tr><th>বিবরণ</th><th style="width:80px">Qty</th><th style="width:90px">দর (টাকা)</th><th style="width:90px">Total</th><th style="width:30px"></th></tr></thead>
         <tbody id="inv-items-body">
-          <tr><td><input placeholder="যেমন: লোগো ডিজাইন" onchange="calcInvTotal()"></td><td><input type="number" value="1" onchange="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" onchange="calcInvTotal()"></td><td><input readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#e63946;cursor:pointer;font-size:16px;">✕</button></td></tr>
+          <tr><td><input placeholder="e.g. Logo Design" onchange="calcInvTotal()"></td><td><input type="number" value="1" onchange="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" onchange="calcInvTotal()"></td><td><input readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#e63946;cursor:pointer;font-size:16px;">✕</button></td></tr>
         </tbody>
       </table>
-      <button class="add-row-btn" onclick="addRow()">+ আরো যোগ করুন</button>
+      <button class="add-row-btn" onclick="addRow()">+ Add Row</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-      <div class="form-group" style="margin:0"><label>মোট বিল</label><input id="i-total" readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></div>
-      <div class="form-group" style="margin:0"><label>অগ্রিম (টাকা)</label><input id="i-advance" type="number" placeholder="0" oninput="calcBalance()"></div>
+      <div class="form-group" style="margin:0"><label>Total Bill</label><input id="i-total" readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></div>
+      <div class="form-group" style="margin:0"><label>Advance (টাকা)</label><input id="i-advance" type="number" placeholder="0" oninput="calcBalance()"></div>
     </div>
-    <div class="form-group"><label>বাকি</label><input id="i-balance" readonly style="background:#fff0f0;font-weight:600;color:#e63946"></div>
-    <div class="form-group"><label>ডিউ ডেট</label><input id="i-due" type="date"></div>
-    <div class="form-group"><label>নোট</label><input id="i-note" placeholder="বিশেষ নির্দেশনা..."></div>
-    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('invoice-modal')">বাতিল</button><button class="btn btn-primary" onclick="addInvoice()">সেভ করুন</button></div>
+    <div class="form-group"><label>Due</label><input id="i-balance" readonly style="background:#fff0f0;font-weight:600;color:#e63946"></div>
+    <div class="form-group"><label>Due Date</label><input id="i-due" type="date"></div>
+    <div class="form-group"><label>Note</label><input id="i-note" placeholder="Special instructions..."></div>
+    <div class="modal-btns"><button class="btn btn-cancel" onclick="closeModal('invoice-modal')">Cancel</button><button class="btn btn-primary" onclick="addInvoice()">Save</button></div>
   </div>
 </div>
 
@@ -434,18 +434,18 @@ function renderInvoices(){
     const total=Number(inv.amount||0);
     const balance=total-advance;
     const badge=inv.status==='paid'?'badge-paid':advance>0?'badge-partial':'badge-unpaid';
-    const label=inv.status==='paid'?'পেইড':advance>0?'আংশিক':'বাকি';
+    const label=inv.status==='paid'?'পেইড':advance>0?'আংশিক':'Due';
     const invNum='INV-'+String(invoices.length-idx).padStart(4,'0');
-    return`<tr><td>${invNum}</td><td>${cl?cl.name:'-'}</td><td>৳${total.toLocaleString()}</td><td>৳${advance.toLocaleString()}</td><td style="color:#e63946;font-weight:600">৳${balance.toLocaleString()}</td><td><span class="badge ${badge}">${label}</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-success btn-sm" onclick="printInvoice('${inv.id}',${idx})">🖨️</button>${inv.status!=='paid'?`<button class="btn btn-primary btn-sm" onclick="markPaid('${inv.id}')">পেইড</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${inv.id}')">✕</button></td></tr>`;
+    return`<tr><td>${invNum}</td><td>${cl?cl.name:'-'}</td><td>৳${total.toLocaleString()}</td><td>৳${advance.toLocaleString()}</td><td style="color:#e63946;font-weight:600">৳${balance.toLocaleString()}</td><td><span class="badge ${badge}">${label}</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-success btn-sm" onclick="printInvoice('${inv.id}',${idx})">🖨️</button>${inv.status!=='paid'?`<button class="btn btn-primary btn-sm" onclick="markPaid('${inv.id}')">Paid</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${inv.id}')">✕</button></td></tr>`;
   }).join('');
 }
 
 function populateSelects(){
   const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
-  document.getElementById('p-client').innerHTML='<option value="">বেছে নিন</option>'+opts;
-  document.getElementById('i-client').innerHTML='<option value="">বেছে নিন</option>'+opts;
+  document.getElementById('p-client').innerHTML='<option value="">Select</option>'+opts;
+  document.getElementById('i-client').innerHTML='<option value="">Select</option>'+opts;
   const popts=projects.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');
-  document.getElementById('t-project').innerHTML='<option value="">বেছে নিন</option>'+popts;
+  document.getElementById('t-project').innerHTML='<option value="">Select</option>'+popts;
 }
 
 // PRINT INVOICE
@@ -470,39 +470,39 @@ function printInvoice(id,idx){
         <div style="font-size:22px;font-weight:700;color:#1a1a2e;">${biz.name||'আপনার প্রতিষ্ঠান'}</div>
         <div style="font-size:13px;color:#555;line-height:1.8;margin-top:4px;">
           ${biz.address?biz.address+'<br>':''}
-          ${biz.phone?'ফোন: '+biz.phone+'<br>':''}
-          ${biz.email?'ইমেইল: '+biz.email:''}
+          ${biz.phone?'Phone: '+biz.phone+'<br>':''}
+          ${biz.email?'Email: '+biz.email:''}
         </div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:32px;font-weight:700;color:#4361ee;">ইনভয়েস</div>
+        <div style="font-size:32px;font-weight:700;color:#4361ee;">INVOICE</div>
         <div style="font-size:13px;color:#888;margin-top:4px;">${invNum}</div>
-        <div style="font-size:13px;color:#888;">তারিখ: ${today}</div>
-        ${inv.due_date?`<div style="font-size:13px;color:#888;">ডিউ ডেট: ${inv.due_date}</div>`:''}
+        <div style="font-size:13px;color:#888;">Date: ${today}</div>
+        ${inv.due_date?`<div style="font-size:13px;color:#888;">Due Date: ${inv.due_date}</div>`:''}
       </div>
     </div>
     <div style="margin-bottom:28px;">
-      <div style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;margin-bottom:8px;">প্রাপক</div>
+      <div style="font-size:11px;color:#888;font-weight:600;text-transform:uppercase;margin-bottom:8px;">Bill To</div>
       <div style="font-size:16px;font-weight:700;color:#1a1a2e;">${cl?cl.name:'ক্লায়েন্ট'}</div>
       <div style="font-size:13px;color:#555;line-height:1.7;margin-top:4px;">
-        ${cl&&cl.phone?'ফোন: '+cl.phone+'<br>':''}
-        ${cl&&cl.email?'ইমেইল: '+cl.email+'<br>':''}
+        ${cl&&cl.phone?'Phone: '+cl.phone+'<br>':''}
+        ${cl&&cl.email?'Email: '+cl.email+'<br>':''}
         ${cl&&cl.address?cl.address:''}
       </div>
     </div>
     <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
-      <thead><tr style="background:#f4f6fb;"><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;">#</th><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;">কাজের বিবরণ</th><th style="padding:10px 14px;text-align:center;font-size:12px;color:#555;">পরিমাণ</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;">দর</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;">মোট</th></tr></thead>
+      <thead><tr style="background:#f4f6fb;"><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;">#</th><th style="padding:10px 14px;text-align:left;font-size:12px;color:#555;">Description</th><th style="padding:10px 14px;text-align:center;font-size:12px;color:#555;">Qty</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;">Rate</th><th style="padding:10px 14px;text-align:right;font-size:12px;color:#555;">Total</th></tr></thead>
       <tbody style="border:1px solid #f0f0f0;">${itemsHTML}</tbody>
     </table>
     <div style="display:flex;justify-content:flex-end;margin-bottom:24px;">
       <div style="background:#f4f6fb;border-radius:10px;padding:16px 24px;min-width:240px;">
-        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">মোট বিল</span><span style="font-weight:600;">৳ ${total.toLocaleString()}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">অগ্রিম</span><span style="font-weight:600;color:#065f46;">৳ ${advance.toLocaleString()}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:32px;font-size:16px;font-weight:700;color:#e63946;padding-top:8px;border-top:2px solid #e63946;margin-top:4px;"><span>বাকি</span><span>৳ ${balance.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Total Bill</span><span style="font-weight:600;">৳ ${total.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Advance</span><span style="font-weight:600;color:#065f46;">৳ ${advance.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:32px;font-size:16px;font-weight:700;color:#e63946;padding-top:8px;border-top:2px solid #e63946;margin-top:4px;"><span>Due</span><span>৳ ${balance.toLocaleString()}</span></div>
       </div>
     </div>
-    ${biz.bkash||biz.paymentNote?`<div style="background:#f0f7ff;border-radius:10px;padding:16px;margin-bottom:24px;"><div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:8px;">💳 পেমেন্ট তথ্য</div><div style="font-size:13px;color:#555;line-height:1.8;">${biz.bkash?'বিকাশ/নগদ: '+biz.bkash+'<br>':''}${biz.paymentNote||''}</div></div>`:''}
-    <div style="text-align:center;font-size:12px;color:#888;border-top:1px solid #eee;padding-top:16px;">ধন্যবাদ আমাদের সেবা গ্রহণ করার জন্য • ${biz.name||''}</div>
+    ${biz.bkash||biz.paymentNote?`<div style="background:#f0f7ff;border-radius:10px;padding:16px;margin-bottom:24px;"><div style="font-size:13px;font-weight:600;color:#1a1a2e;margin-bottom:8px;">💳 Payment Info</div><div style="font-size:13px;color:#555;line-height:1.8;">${biz.bkash?'bKash/Nagad: '+biz.bkash+'<br>':''}${biz.paymentNote||''}</div></div>`:''}
+    <div style="text-align:center;font-size:12px;color:#888;border-top:1px solid #eee;padding-top:16px;">Thank you for your business • ${biz.name||''}</div>
   </div>`;
 
   const printDiv=document.getElementById('invoice-print');
@@ -519,7 +519,7 @@ async function addTask(){const title=document.getElementById('t-title').value.tr
 
 async function addInvoice(){
   const client_id=document.getElementById('i-client').value;
-  if(!client_id)return alert('ক্লায়েন্ট বেছে নিন');
+  if(!client_id)return alert('ক্লায়েন্ট Select');
   const items=[];
   let total=0;
   document.querySelectorAll('#inv-items-body tr').forEach(tr=>{
@@ -532,7 +532,7 @@ async function addInvoice(){
   const status=advance>=total?'paid':advance>0?'partial':'unpaid';
   await sb.from('invoices').insert({user_id:currentUser.id,client_id,amount:total,advance,status,items:JSON.stringify(items),due_date:document.getElementById('i-due').value,note:document.getElementById('i-note').value});
   closeModal('invoice-modal');
-  document.getElementById('inv-items-body').innerHTML=`<tr><td><input placeholder="যেমন: লোগো ডিজাইন" onchange="calcInvTotal()"></td><td><input type="number" value="1" onchange="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" onchange="calcInvTotal()"></td><td><input readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#e63946;cursor:pointer;font-size:16px;">✕</button></td></tr>`;
+  document.getElementById('inv-items-body').innerHTML=`<tr><td><input placeholder="e.g. Logo Design" onchange="calcInvTotal()"></td><td><input type="number" value="1" onchange="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" onchange="calcInvTotal()"></td><td><input readonly style="background:#f4f6fb;font-weight:600;color:#4361ee"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:#e63946;cursor:pointer;font-size:16px;">✕</button></td></tr>`;
   document.getElementById('i-advance').value='';document.getElementById('i-total').value='';document.getElementById('i-balance').value='';
   loadAll();
 }
