@@ -7,7 +7,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;}
-    :root{--bg:#0f1117;--bg2:#181c25;--bg3:#1e2330;--bg4:#242938;--border:#2a2f3d;--border2:#353b4e;--accent:#6c63ff;--accent2:#8b84ff;--text:#e8eaf0;--text2:#9098b0;--text3:#5a6278;--green:#1D9E75;--red:#E24B4A;--amber:#BA7517;--blue:#378ADD;--green-bg:rgba(29,158,117,0.12);--red-bg:rgba(226,75,74,0.12);--amber-bg:rgba(186,117,23,0.12);--blue-bg:rgba(55,138,221,0.12);--accent-bg:rgba(108,99,255,0.12);}
+    :root{--bg:#0a0a0a;--bg2:#111111;--bg3:#1a1a1a;--bg4:#222222;--border:#2a2a2a;--border2:#333333;--accent:#e63946;--accent2:#ff4d5a;--text:#f0f0f0;--text2:#a0a0a0;--text3:#606060;--green:#1D9E75;--red:#e63946;--amber:#BA7517;--blue:#378ADD;--green-bg:rgba(29,158,117,0.12);--red-bg:rgba(230,57,70,0.15);--amber-bg:rgba(186,117,23,0.12);--blue-bg:rgba(55,138,221,0.12);--accent-bg:rgba(230,57,70,0.12);}
     body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
     /* AUTH */
     .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--bg);}
@@ -23,7 +23,7 @@
     .form-group input,.form-group select,.form-group textarea{width:100%;padding:11px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:9px;font-size:13px;color:var(--text);outline:none;transition:border 0.2s;}
     .form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent);}
     .form-group select option{background:var(--bg3);}
-    .auth-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.2s;}
+    .auth-btn{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:background 0.2s;} .auth-btn:hover{background:var(--accent2);}
     .auth-btn:hover{background:var(--accent2);}
     .auth-msg{text-align:center;font-size:12px;margin-top:12px;padding:10px;border-radius:8px;display:none;}
     .auth-msg.error{background:var(--red-bg);color:var(--red);display:block;border:1px solid rgba(226,75,74,0.2);}
@@ -32,12 +32,12 @@
     .app-wrap{display:none;min-height:100vh;}
     .sidebar{position:fixed;left:0;top:0;width:220px;height:100vh;background:var(--bg2);border-right:1px solid var(--border);padding:0;z-index:10;display:flex;flex-direction:column;}
     .s-brand{padding:20px 20px 16px;border-bottom:1px solid var(--border);}
-    .s-brand-name{font-size:14px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .s-brand-name{font-size:14px;font-weight:600;color:var(--accent);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .s-brand-email{font-size:11px;color:var(--text3);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .s-nav{padding:12px 0;flex:1;}
     .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;color:var(--text2);cursor:pointer;font-size:13px;border-left:2px solid transparent;transition:all 0.15s;}
     .nav-item:hover{color:var(--text);background:rgba(255,255,255,0.03);}
-    .nav-item.active{color:var(--text);background:var(--accent-bg);border-left:2px solid var(--accent);}
+    .nav-item.active{color:var(--text);background:rgba(230,57,70,0.1);border-left:2px solid var(--accent);}
     .nav-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;background:rgba(255,255,255,0.05);flex-shrink:0;}
     .nav-item.active .nav-icon{background:var(--accent-bg);}
     .s-footer{padding:16px 20px;border-top:1px solid var(--border);}
@@ -87,7 +87,7 @@
     .btn-cancel{background:var(--bg3);color:var(--text2);border:1px solid var(--border);}
     .empty{text-align:center;padding:40px;color:var(--text3);font-size:13px;}
     /* CALC */
-    .calc-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;}
+    .calc-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:20px;border-top:2px solid var(--accent);}
     .calc-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
     .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
     .calc-inp-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;}
@@ -115,7 +115,7 @@
     .inv-items-tbl td{padding:5px 4px;}
     .inv-items-tbl input{width:100%;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--text);outline:none;}
     .inv-items-tbl input:focus{border-color:var(--accent);}
-    .add-row-btn{background:var(--accent-bg);color:var(--accent2);border:1px solid rgba(108,99,255,0.2);border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;margin-bottom:14px;}
+    .add-row-btn{background:rgba(230,57,70,0.1);color:var(--accent);border:1px solid rgba(230,57,70,0.2);border-radius:7px;padding:6px 14px;font-size:12px;cursor:pointer;margin-bottom:14px;}
     /* PROGRESS */
     .progress-section{margin-top:4px;}
     .progress-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
@@ -178,7 +178,7 @@
     <div id="dashboard" class="page active">
       <div class="page-header"><div class="page-title">Dashboard</div></div>
       <div class="stats">
-        <div class="stat-card"><div class="stat-label">Total Clients</div><div class="stat-value" style="color:var(--accent2)" id="s-clients">0</div></div>
+        <div class="stat-card"><div class="stat-label">Total Clients</div><div class="stat-value" style="color:var(--accent)" id="s-clients">0</div></div>
         <div class="stat-card"><div class="stat-label">Active Projects</div><div class="stat-value" style="color:var(--green)" id="s-projects">0</div></div>
         <div class="stat-card"><div class="stat-label">Pending Tasks</div><div class="stat-value" style="color:var(--amber)" id="s-tasks">0</div></div>
         <div class="stat-card"><div class="stat-label">Due Payment</div><div class="stat-value" style="color:var(--red)" id="s-invoices">৳0</div></div>
@@ -190,12 +190,12 @@
           <div class="calc-inp-group"><label>Total Expense (৳)</label><input type="number" id="total-expense" placeholder="e.g. 10000" oninput="calculate()"></div>
         </div>
         <div class="divisions">
-          <div class="div-box"><input class="div-name-inp" id="name1" placeholder="Division 1" oninput="saveDivisions()"><div class="pct-row"><input class="pct-inp" id="pct1" type="number" value="40" oninput="calculate()"><span class="pct-lbl">%</span></div><div class="div-amt" style="color:var(--accent2)" id="amt1">৳ 0</div></div>
+          <div class="div-box"><input class="div-name-inp" id="name1" placeholder="Division 1" oninput="saveDivisions()"><div class="pct-row"><input class="pct-inp" id="pct1" type="number" value="40" oninput="calculate()"><span class="pct-lbl">%</span></div><div class="div-amt" style="color:var(--accent)" id="amt1">৳ 0</div></div>
           <div class="div-box"><input class="div-name-inp" id="name2" placeholder="Division 2" oninput="saveDivisions()"><div class="pct-row"><input class="pct-inp" id="pct2" type="number" value="30" oninput="calculate()"><span class="pct-lbl">%</span></div><div class="div-amt" style="color:var(--green)" id="amt2">৳ 0</div></div>
           <div class="div-box"><input class="div-name-inp" id="name3" placeholder="Division 3" oninput="saveDivisions()"><div class="pct-row"><input class="pct-inp" id="pct3" type="number" value="30" oninput="calculate()"><span class="pct-lbl">%</span></div><div class="div-amt" style="color:var(--amber)" id="amt3">৳ 0</div></div>
         </div>
         <div class="pct-warn" id="pct-warning">⚠️ Total % must be 100! Current: <span id="pct-total">100</span>%</div>
-        <div class="calc-total-row"><span style="font-size:13px;color:var(--text2)">Net Profit</span><span style="font-size:18px;font-weight:500;color:var(--text)" id="net-profit">৳ 0</span></div>
+        <div class="calc-total-row"><span style="font-size:13px;color:var(--text2)">Net Profit</span><span style="font-size:18px;font-weight:500;color:var(--accent)" id="net-profit">৳ 0</span></div>
       </div>
     </div>
 
@@ -312,13 +312,13 @@
       <table class="inv-items-tbl">
         <thead><tr><th>Description</th><th style="width:70px">Qty</th><th style="width:90px">Rate (৳)</th><th style="width:90px">Total</th><th style="width:28px"></th></tr></thead>
         <tbody id="inv-items-body">
-          <tr><td><input placeholder="e.g. Logo Design" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent2);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td></tr>
+          <tr><td><input placeholder="e.g. Logo Design" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td></tr>
         </tbody>
       </table>
       <button class="add-row-btn" onclick="addRow()">+ Add Row</button>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
-      <div class="form-group" style="margin:0"><label>Total Bill</label><input id="i-total" readonly style="color:var(--accent2);font-weight:500;"></div>
+      <div class="form-group" style="margin:0"><label>Total Bill</label><input id="i-total" readonly style="color:var(--accent);font-weight:500;"></div>
       <div class="form-group" style="margin:0"><label>Advance (৳)</label><input id="i-advance" type="number" placeholder="0" oninput="calcBalance()"></div>
       <div class="form-group" style="margin:0"><label>Due</label><input id="i-balance" readonly style="color:var(--red);font-weight:500;"></div>
     </div>
@@ -352,7 +352,7 @@ function loadSettings(){const s=JSON.parse(localStorage.getItem('biz_settings')|
 function applySettings(s){const n=s.name||'Design Manager';document.getElementById('sidebar-biz-name').textContent=n;document.getElementById('auth-title').textContent=n;document.title=n;}
 function getBiz(){return JSON.parse(localStorage.getItem('biz_settings')||'{}');}
 
-function addRow(){const tb=document.getElementById('inv-items-body');const tr=document.createElement('tr');tr.innerHTML=`<td><input placeholder="Description" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent2);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td>`;tb.appendChild(tr);}
+function addRow(){const tb=document.getElementById('inv-items-body');const tr=document.createElement('tr');tr.innerHTML=`<td><input placeholder="Description" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td>`;tb.appendChild(tr);}
 function removeRow(btn){const rows=document.querySelectorAll('#inv-items-body tr');if(rows.length>1){btn.closest('tr').remove();calcInvTotal();}}
 function calcInvTotal(){let t=0;document.querySelectorAll('#inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');const q=parseFloat(inp[1].value)||0,r=parseFloat(inp[2].value)||0,rt=q*r;inp[3].value=rt>0?'৳ '+rt.toLocaleString():'';t+=rt;});document.getElementById('i-total').value=t>0?'৳ '+t.toLocaleString():'';calcBalance();return t;}
 function calcBalance(){let t=0;document.querySelectorAll('#inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');t+=(parseFloat(inp[1].value)||0)*(parseFloat(inp[2].value)||0);});const adv=parseFloat(document.getElementById('i-advance').value)||0;document.getElementById('i-balance').value='৳ '+Math.max(0,t-adv).toLocaleString();}
@@ -391,7 +391,7 @@ function printInvoice(id,idx){
         <div style="font-size:13px;color:#555;line-height:1.8;margin-top:4px;">${biz.address?'Address: '+biz.address+'<br>':''}${biz.phone?'Phone: '+biz.phone+'<br>':''}${biz.email?'Email: '+biz.email:''}</div>
       </div>
       <div style="text-align:right;">
-        <div style="font-size:32px;font-weight:700;color:#6c63ff;">INVOICE</div>
+        <div style="font-size:32px;font-weight:700;color:#e63946;">INVOICE</div>
         <div style="font-size:13px;color:#888;margin-top:4px;">${invNum}</div>
         <div style="font-size:13px;color:#888;">Date: ${today}</div>
         ${inv.due_date?`<div style="font-size:13px;color:#888;">Due Date: ${inv.due_date}</div>`:''}
@@ -410,7 +410,7 @@ function printInvoice(id,idx){
       <div style="background:#f8f9fa;border-radius:10px;padding:16px 24px;min-width:240px;">
         <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Total Bill</span><span style="font-weight:600;">৳ ${tot.toLocaleString()}</span></div>
         <div style="display:flex;justify-content:space-between;gap:32px;font-size:13px;margin-bottom:8px;"><span style="color:#555;">Advance</span><span style="font-weight:600;color:#1D9E75;">৳ ${adv.toLocaleString()}</span></div>
-        <div style="display:flex;justify-content:space-between;gap:32px;font-size:16px;font-weight:700;color:#E24B4A;padding-top:10px;border-top:2px solid #E24B4A;margin-top:4px;"><span>Due</span><span>৳ ${bal.toLocaleString()}</span></div>
+        <div style="display:flex;justify-content:space-between;gap:32px;font-size:16px;font-weight:700;color:#e63946;padding-top:10px;border-top:2px solid #e63946;margin-top:4px;"><span>Due</span><span>৳ ${bal.toLocaleString()}</span></div>
       </div>
     </div>
     ${biz.terms?`<div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:16px;margin-bottom:24px;"><div style="font-size:12px;font-weight:600;color:#92400e;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Terms & Conditions</div><div style="font-size:12px;color:#555;line-height:1.9;white-space:pre-line;">${biz.terms}</div></div>`:''}
@@ -437,7 +437,7 @@ async function addInvoice(){const client_id=document.getElementById('i-client').
 const{data:seqData}=await sb.from('invoices').select('inv_seq').eq('user_id',currentUser.id).order('inv_seq',{ascending:false}).limit(1);
 const nextSeq=(seqData&&seqData.length>0&&seqData[0].inv_seq)?seqData[0].inv_seq+1:1;
 const invNumber='INV-'+String(nextSeq).padStart(4,'0');
-await sb.from('invoices').insert({user_id:currentUser.id,client_id,amount:total,advance,status,items:JSON.stringify(items),due_date:document.getElementById('i-due').value,note:document.getElementById('i-note').value,inv_seq:nextSeq,inv_number:invNumber});closeModal('invoice-modal');document.getElementById('inv-items-body').innerHTML=`<tr><td><input placeholder="e.g. Logo Design" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent2);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td></tr>`;document.getElementById('i-advance').value='';document.getElementById('i-total').value='';document.getElementById('i-balance').value='';loadAll();}
+await sb.from('invoices').insert({user_id:currentUser.id,client_id,amount:total,advance,status,items:JSON.stringify(items),due_date:document.getElementById('i-due').value,note:document.getElementById('i-note').value,inv_seq:nextSeq,inv_number:invNumber});closeModal('invoice-modal');document.getElementById('inv-items-body').innerHTML=`<tr><td><input placeholder="e.g. Logo Design" oninput="calcInvTotal()"></td><td><input type="number" value="1" oninput="calcInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcInvTotal()"></td><td><input readonly style="color:var(--accent);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td></tr>`;document.getElementById('i-advance').value='';document.getElementById('i-total').value='';document.getElementById('i-balance').value='';loadAll();}
 async function deleteItem(table,id){if(!confirm('Delete this?'))return;await sb.from(table).delete().eq('id',id);loadAll();}
 async function toggleTask(id,done){await sb.from('tasks').update({is_done:done}).eq('id',id);loadAll();}
 async function markPaid(id){await sb.from('invoices').update({status:'paid'}).eq('id',id);loadAll();}
