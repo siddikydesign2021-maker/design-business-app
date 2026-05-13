@@ -49,11 +49,11 @@
     .page-title{font-size:20px;font-weight:500;color:var(--text);}
     /* STATS */
     .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px;}
-    .stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px;}
+    .stat-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:18px;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;cursor:default;} .stat-card:hover{transform:scale(1.06);box-shadow:0 8px 32px rgba(230,57,70,0.15);border-color:rgba(230,57,70,0.3);}
     .stat-label{font-size:12px;color:var(--text2);margin-bottom:10px;}
     .stat-value{font-size:26px;font-weight:500;}
     /* CARDS */
-    .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;}
+    .card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;} .card:hover{transform:scale(1.01);box-shadow:0 4px 20px rgba(230,57,70,0.08);}
     .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;}
     .card-title{font-size:14px;font-weight:500;color:var(--text);}
     /* BUTTONS */
@@ -91,10 +91,10 @@
     .calc-title{font-size:14px;font-weight:500;color:var(--text);margin-bottom:18px;display:flex;align-items:center;gap:8px;}
     .calc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
     .calc-inp-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:6px;}
-    .calc-inp-group input{width:100%;padding:11px 14px;background:var(--bg4);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;outline:none;}
+    .calc-inp-group input{width:100%;padding:11px 14px;background:var(--bg4);border:1px solid var(--border);border-radius:9px;color:var(--text);font-size:14px;outline:none;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),border 0.2s;} .calc-inp-group input:hover{transform:scale(1.02);border-color:rgba(230,57,70,0.4);}
     .calc-inp-group input:focus{border-color:var(--accent);}
     .divisions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px;}
-    .div-box{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:14px;}
+    .div-box{background:var(--bg4);border:1px solid var(--border);border-radius:10px;padding:14px;transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.3s ease;} .div-box:hover{transform:scale(1.05);box-shadow:0 6px 24px rgba(230,57,70,0.12);border-color:rgba(230,57,70,0.3);}
     .div-name-inp{background:transparent;border:none;border-bottom:1px solid var(--border2);color:var(--text);font-size:13px;font-weight:500;width:100%;outline:none;padding-bottom:6px;margin-bottom:10px;}
     .div-name-inp::placeholder{color:var(--text3);}
     .pct-row{display:flex;align-items:center;gap:6px;margin-bottom:10px;}
@@ -269,6 +269,34 @@
 
 <div id="invoice-print"></div>
 
+<!-- EDIT INVOICE MODAL -->
+<div id="edit-invoice-modal" class="modal-overlay">
+  <div class="modal">
+    <h2>✏️ Edit Invoice</h2>
+    <input type="hidden" id="edit-inv-id">
+    <div class="form-group"><label>Client</label><select id="edit-i-client"><option value="">Select client</option></select></div>
+    <div style="margin-bottom:12px;">
+      <label style="display:block;font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500;">Work Details</label>
+      <table class="inv-items-tbl">
+        <thead><tr><th>Description</th><th style="width:70px">Qty</th><th style="width:90px">Rate (৳)</th><th style="width:90px">Total</th><th style="width:28px"></th></tr></thead>
+        <tbody id="edit-inv-items-body"></tbody>
+      </table>
+      <button class="add-row-btn" onclick="addEditRow()">+ Add Row</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div class="form-group" style="margin:0"><label>Total Bill</label><input id="edit-i-total" readonly style="color:var(--accent);font-weight:500;"></div>
+      <div class="form-group" style="margin:0"><label>Advance (৳)</label><input id="edit-i-advance" type="number" placeholder="0" oninput="calcEditBalance()"></div>
+      <div class="form-group" style="margin:0"><label>Due</label><input id="edit-i-balance" readonly style="color:var(--red);font-weight:500;"></div>
+    </div>
+    <div class="form-group"><label>Due Date</label><input id="edit-i-due" type="date"></div>
+    <div class="form-group"><label>Note</label><input id="edit-i-note" placeholder="Special instructions..."></div>
+    <div class="modal-btns">
+      <button class="btn btn-cancel" onclick="closeModal('edit-invoice-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditInvoice()">Update Invoice</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODALS -->
 <div id="client-modal" class="modal-overlay">
   <div class="modal">
@@ -371,7 +399,7 @@ function renderProjects(){const tb=document.getElementById('projects-table');if(
 
 function renderTasks(){const tb=document.getElementById('tasks-table');if(!tasks.length){tb.innerHTML='<tr><td colspan="5" class="empty">No tasks yet</td></tr>';return;}tb.innerHTML=tasks.map(t=>{const pr=projects.find(p=>p.id===t.project_id);return`<tr><td style="text-decoration:${t.is_done?'line-through':'none'};color:${t.is_done?'var(--text3)':'var(--text)'}">${t.title}</td><td>${pr?pr.title:'-'}</td><td>${t.deadline||'-'}</td><td><input type="checkbox" ${t.is_done?'checked':''} onchange="toggleTask('${t.id}',this.checked)" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent)"></td><td><button class="btn btn-danger btn-sm" onclick="deleteItem('tasks','${t.id}')">Delete</button></td></tr>`;}).join('');}
 
-function renderInvoices(){const tb=document.getElementById('invoices-table');if(!invoices.length){tb.innerHTML='<tr><td colspan="7" class="empty">No invoices yet</td></tr>';return;}tb.innerHTML=invoices.map((inv,idx)=>{const cl=clients.find(c=>c.id===inv.client_id);const adv=Number(inv.advance||0);const tot=Number(inv.amount||0);const bal=Math.max(0,tot-adv);const badge=inv.status==='paid'?'badge-paid':adv>0?'badge-partial':'badge-unpaid';const label=inv.status==='paid'?'Paid':adv>0?'Partial':'Unpaid';const invNum=inv.inv_number||'INV-'+String(inv.inv_seq||idx+1).padStart(4,'0');return`<tr><td>${invNum}</td><td>${cl?cl.name:'-'}</td><td>৳${tot.toLocaleString()}</td><td style="color:var(--green)">৳${adv.toLocaleString()}</td><td style="color:var(--red);font-weight:500">৳${bal.toLocaleString()}</td><td><span class="badge ${badge}">${label}</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-success btn-sm" onclick="printInvoice('${inv.id}',${idx})">🖨️</button>${inv.status!=='paid'?`<button class="btn btn-primary btn-sm" onclick="markPaid('${inv.id}')">Paid</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${inv.id}')">✕</button></td></tr>`;}).join('');}
+function renderInvoices(){const tb=document.getElementById('invoices-table');if(!invoices.length){tb.innerHTML='<tr><td colspan="7" class="empty">No invoices yet</td></tr>';return;}tb.innerHTML=invoices.map((inv,idx)=>{const cl=clients.find(c=>c.id===inv.client_id);const adv=Number(inv.advance||0);const tot=Number(inv.amount||0);const bal=Math.max(0,tot-adv);const badge=inv.status==='paid'?'badge-paid':adv>0?'badge-partial':'badge-unpaid';const label=inv.status==='paid'?'Paid':adv>0?'Partial':'Unpaid';const invNum=inv.inv_number||'INV-'+String(inv.inv_seq||idx+1).padStart(4,'0');return`<tr><td>${invNum}</td><td>${cl?cl.name:'-'}</td><td>৳${tot.toLocaleString()}</td><td style="color:var(--green)">৳${adv.toLocaleString()}</td><td style="color:var(--red);font-weight:500">৳${bal.toLocaleString()}</td><td><span class="badge ${badge}">${label}</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-success btn-sm" onclick="printInvoice('${inv.id}',${idx})">🖨️</button><button class="btn btn-primary btn-sm" onclick="editInvoice('${inv.id}')">✏️</button>${inv.status!=='paid'?`<button class="btn btn-primary btn-sm" onclick="markPaid('${inv.id}')">Paid</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${inv.id}')">✕</button></td></tr>`;}).join('');}
 
 function populateSelects(){const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');document.getElementById('p-client').innerHTML='<option value="">Select client</option>'+opts;document.getElementById('i-client').innerHTML='<option value="">Select client</option>'+opts;const popts=projects.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');document.getElementById('t-project').innerHTML='<option value="">Select project</option>'+popts;}
 
@@ -442,6 +470,72 @@ async function deleteItem(table,id){if(!confirm('Delete this?'))return;await sb.
 async function toggleTask(id,done){await sb.from('tasks').update({is_done:done}).eq('id',id);loadAll();}
 async function markPaid(id){await sb.from('invoices').update({status:'paid'}).eq('id',id);loadAll();}
 function showPage(id,e){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');e.currentTarget.classList.add('active');}
+// EDIT INVOICE
+function addEditRow(){
+  const tb=document.getElementById('edit-inv-items-body');
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><input placeholder="Description" oninput="calcEditInvTotal()"></td><td><input type="number" value="1" oninput="calcEditInvTotal()" style="text-align:center"></td><td><input type="number" placeholder="0" oninput="calcEditInvTotal()"></td><td><input readonly style="color:var(--accent);font-weight:500;"></td><td><button onclick="removeEditRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td>`;
+  tb.appendChild(tr);
+}
+function removeEditRow(btn){const rows=document.querySelectorAll('#edit-inv-items-body tr');if(rows.length>1){btn.closest('tr').remove();calcEditInvTotal();}}
+function calcEditInvTotal(){
+  let t=0;
+  document.querySelectorAll('#edit-inv-items-body tr').forEach(tr=>{
+    const inp=tr.querySelectorAll('input');
+    const q=parseFloat(inp[1].value)||0,r=parseFloat(inp[2].value)||0,rt=q*r;
+    inp[3].value=rt>0?'৳ '+rt.toLocaleString():'';t+=rt;
+  });
+  document.getElementById('edit-i-total').value=t>0?'৳ '+t.toLocaleString():'';
+  calcEditBalance();return t;
+}
+function calcEditBalance(){
+  let t=0;
+  document.querySelectorAll('#edit-inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');t+=(parseFloat(inp[1].value)||0)*(parseFloat(inp[2].value)||0);});
+  const adv=parseFloat(document.getElementById('edit-i-advance').value)||0;
+  document.getElementById('edit-i-balance').value='৳ '+Math.max(0,t-adv).toLocaleString();
+}
+function editInvoice(id){
+  const inv=invoices.find(i=>i.id===id);if(!inv)return;
+  document.getElementById('edit-inv-id').value=id;
+  // populate client select
+  const opts=clients.map(c=>`<option value="${c.id}" ${c.id===inv.client_id?'selected':''}>${c.name}</option>`).join('');
+  document.getElementById('edit-i-client').innerHTML='<option value="">Select client</option>'+opts;
+  // populate items
+  const items=inv.items?JSON.parse(inv.items):[];
+  const tb=document.getElementById('edit-inv-items-body');
+  tb.innerHTML='';
+  if(items.length>0){
+    items.forEach(item=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td><input value="${item.desc||''}" placeholder="Description" oninput="calcEditInvTotal()"></td><td><input type="number" value="${item.qty||1}" oninput="calcEditInvTotal()" style="text-align:center"></td><td><input type="number" value="${item.rate||0}" oninput="calcEditInvTotal()"></td><td><input readonly style="color:var(--accent);font-weight:500;" value="${item.total?'৳ '+Number(item.total).toLocaleString():''}"></td><td><button onclick="removeEditRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td>`;
+      tb.appendChild(tr);
+    });
+  } else {
+    addEditRow();
+  }
+  document.getElementById('edit-i-advance').value=inv.advance||0;
+  document.getElementById('edit-i-due').value=inv.due_date||'';
+  document.getElementById('edit-i-note').value=inv.note||'';
+  calcEditInvTotal();
+  openModal('edit-invoice-modal');
+}
+async function saveEditInvoice(){
+  const id=document.getElementById('edit-inv-id').value;
+  const client_id=document.getElementById('edit-i-client').value;
+  if(!client_id)return alert('Select client');
+  const items=[];let total=0;
+  document.querySelectorAll('#edit-inv-items-body tr').forEach(tr=>{
+    const inp=tr.querySelectorAll('input');
+    const desc=inp[0].value,qty=parseFloat(inp[1].value)||0,rate=parseFloat(inp[2].value)||0,rt=qty*rate;
+    if(desc){items.push({desc,qty,rate,total:rt});total+=rt;}
+  });
+  if(!total)return alert('Add work details');
+  const advance=parseFloat(document.getElementById('edit-i-advance').value)||0;
+  const status=advance>=total?'paid':advance>0?'partial':'unpaid';
+  await sb.from('invoices').update({client_id,amount:total,advance,status,items:JSON.stringify(items),due_date:document.getElementById('edit-i-due').value,note:document.getElementById('edit-i-note').value}).eq('id',id);
+  closeModal('edit-invoice-modal');loadAll();
+}
+
 function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 </script>
