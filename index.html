@@ -167,6 +167,7 @@
       <div class="nav-item" onclick="showPage('tasks',event)"><div class="nav-icon">✅</div><span class="label">Tasks</span></div>
       <div class="nav-item" onclick="showPage('invoices',event)"><div class="nav-icon">🧾</div><span class="label">Invoices</span></div>
       <div class="nav-item" onclick="showPage('settings',event)"><div class="nav-icon">⚙️</div><span class="label">Settings</span></div>
+      <div class="nav-item" id="admin-nav" style="display:none" onclick="showPage('admin',event)"><div class="nav-icon">👑</div><span class="label">Admin</span></div>
     </div>
     <div class="s-footer">
       <button class="logout-btn" onclick="doLogout()">Logout</button>
@@ -232,6 +233,26 @@
       <div class="card">
         <table><thead><tr><th>Invoice #</th><th>Client</th><th>Total</th><th>Advance</th><th>Due</th><th>Status</th><th>Action</th></tr></thead>
         <tbody id="invoices-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- ADMIN PAGE -->
+    <div id="admin" class="page">
+      <div class="page-header"><div class="page-title">👑 Admin Panel</div><button class="btn btn-primary" onclick="loadAdminData()">🔄 Refresh</button></div>
+      <div class="stats" style="margin-bottom:20px;">
+        <div class="stat-card"><div class="stat-label">Total Users</div><div class="stat-value" style="color:var(--accent)" id="admin-total-users">0</div></div>
+        <div class="stat-card"><div class="stat-label">Active Today</div><div class="stat-value" style="color:var(--green)" id="admin-active-today">0</div></div>
+        <div class="stat-card"><div class="stat-label">This Month</div><div class="stat-value" style="color:var(--amber)" id="admin-this-month">0</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title">All Users</span>
+          <button class="btn btn-success btn-sm" onclick="copyAllEmails()">📋 Copy All Emails</button>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Email</th><th>Last Login</th><th>Joined</th><th>Clients</th><th>Invoices</th></tr></thead>
+          <tbody id="admin-users-table"><tr><td colspan="5" class="empty">Loading...</td></tr></tbody>
+        </table>
       </div>
     </div>
 
@@ -363,7 +384,7 @@ const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null,clients=[],projects=[],tasks=[],invoices=[];
 
 sb.auth.onAuthStateChange((event,session)=>{
-  if(session){currentUser=session.user;document.getElementById('auth-wrap').style.display='none';document.getElementById('app-wrap').style.display='block';document.getElementById('user-email').textContent=session.user.email;loadAll();loadDivisions();loadSettings();}
+  if(session){currentUser=session.user;document.getElementById('auth-wrap').style.display='none';document.getElementById('app-wrap').style.display='block';document.getElementById('user-email').textContent=session.user.email;loadAll();loadDivisions();loadSettings();checkAdmin();}
   else{currentUser=null;document.getElementById('auth-wrap').style.display='flex';document.getElementById('app-wrap').style.display='none';}
 });
 
@@ -469,7 +490,7 @@ await sb.from('invoices').insert({user_id:currentUser.id,client_id,amount:total,
 async function deleteItem(table,id){if(!confirm('Delete this?'))return;await sb.from(table).delete().eq('id',id);loadAll();}
 async function toggleTask(id,done){await sb.from('tasks').update({is_done:done}).eq('id',id);loadAll();}
 async function markPaid(id){await sb.from('invoices').update({status:'paid'}).eq('id',id);loadAll();}
-function showPage(id,e){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');e.currentTarget.classList.add('active');}
+function showPage(id,e){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.getElementById(id).classList.add('active');e.currentTarget.classList.add('active');if(id==='admin')loadAdminData();}
 // EDIT INVOICE
 function addEditRow(){
   const tb=document.getElementById('edit-inv-items-body');
@@ -534,6 +555,77 @@ async function saveEditInvoice(){
   const status=advance>=total?'paid':advance>0?'partial':'unpaid';
   await sb.from('invoices').update({client_id,amount:total,advance,status,items:JSON.stringify(items),due_date:document.getElementById('edit-i-due').value,note:document.getElementById('edit-i-note').value}).eq('id',id);
   closeModal('edit-invoice-modal');loadAll();
+}
+
+// ADMIN
+const ADMIN_EMAIL = 'siddikydesign2021@gmail.com';
+let allUsersData = [];
+
+async function checkAdmin() {
+  if(currentUser && currentUser.email === ADMIN_EMAIL) {
+    document.getElementById('admin-nav').style.display = 'flex';
+  }
+}
+
+async function loadAdminData() {
+  if(!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+
+  // Get emails from admin_users view
+  const {data: authUsers, error: authErr} = await sb.from('admin_users').select('*').order('created_at', {ascending: false});
+  
+  // Get all data grouped by user
+  const {data: allClients} = await sb.from('clients').select('user_id');
+  const {data: allInvoices} = await sb.from('invoices').select('user_id');
+
+  const clientCount = {};
+  const invoiceCount = {};
+  if(allClients) allClients.forEach(c => { clientCount[c.user_id] = (clientCount[c.user_id]||0)+1; });
+  if(allInvoices) allInvoices.forEach(i => { invoiceCount[i.user_id] = (invoiceCount[i.user_id]||0)+1; });
+
+  allUsersData = (authUsers||[]).map(u => ({
+    id: u.id,
+    email: u.email,
+    created_at: u.created_at,
+    last_sign_in_at: u.last_sign_in_at,
+    clients: clientCount[u.id]||0,
+    invoices: invoiceCount[u.id]||0,
+  }));
+
+  // Stats
+  const today = new Date().toDateString();
+  const thisMonth = new Date().getMonth();
+  const activeToday = allUsersData.filter(u => u.last_sign_in_at && new Date(u.last_sign_in_at).toDateString() === today).length;
+  const thisMonthUsers = allUsersData.filter(u => new Date(u.created_at).getMonth() === thisMonth).length;
+
+  document.getElementById('admin-total-users').textContent = allUsersData.length;
+  document.getElementById('admin-active-today').textContent = activeToday;
+  document.getElementById('admin-this-month').textContent = thisMonthUsers;
+
+  renderAdminUsers(allUsersData);
+}
+
+function renderAdminUsers(users) {
+  const tb = document.getElementById('admin-users-table');
+  if(!users.length) {
+    tb.innerHTML = '<tr><td colspan="6" class="empty">No users found</td></tr>';
+    return;
+  }
+  tb.innerHTML = users.map((u, idx) => `
+    <tr>
+      <td style="color:var(--text3)">${idx+1}</td>
+      <td style="color:var(--text);font-weight:500">${u.email||'-'}</td>
+      <td style="color:var(--text2);font-size:12px">${u.last_sign_in_at?new Date(u.last_sign_in_at).toLocaleDateString('en-GB'):'-'}</td>
+      <td style="color:var(--text2);font-size:12px">${new Date(u.created_at).toLocaleDateString('en-GB')}</td>
+      <td style="color:var(--accent)">${u.clients}</td>
+      <td style="color:var(--green)">${u.invoices}</td>
+    </tr>
+  `).join('');
+}
+
+function copyAllEmails() {
+  if(!allUsersData.length) return alert('No data loaded');
+  const ids = allUsersData.map(u => u.user_id).join('\n');
+  navigator.clipboard.writeText(ids).then(() => alert('Emails copied! (' + allUsersData.length + ' users)'));
 }
 
 function openModal(id){document.getElementById(id).classList.add('open');}
