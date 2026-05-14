@@ -142,12 +142,20 @@
     </div>
     <div id="login-form">
       <div class="form-group"><label>Email</label><input id="l-email" type="email" placeholder="your@email.com"></div>
-      <div class="form-group"><label>Password</label><input id="l-pass" type="password" placeholder="Password"></div>
+      <div class="form-group"><label>Password</label>
+      <div style="position:relative;">
+        <input id="l-pass" type="password" placeholder="Password" style="padding-right:44px;">
+        <button onclick="togglePass('l-pass','eye1')" type="button" id="eye1" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#606060;">👁️</button>
+      </div></div>
       <button class="auth-btn" onclick="doLogin()">Login</button>
     </div>
     <div id="signup-form" style="display:none">
       <div class="form-group"><label>Email</label><input id="s-email" type="email" placeholder="your@email.com"></div>
-      <div class="form-group"><label>Password</label><input id="s-pass" type="password" placeholder="Min 6 characters"></div>
+      <div class="form-group"><label>Password</label>
+      <div style="position:relative;">
+        <input id="s-pass" type="password" placeholder="Min 6 characters" style="padding-right:44px;">
+        <button onclick="togglePass('s-pass','eye2')" type="button" id="eye2" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:16px;color:#606060;">👁️</button>
+      </div></div>
       <button class="auth-btn" onclick="doSignup()">Create Account</button>
     </div>
     <div class="auth-msg" id="auth-msg"></div>
@@ -387,6 +395,13 @@ sb.auth.onAuthStateChange((event,session)=>{
   if(session){currentUser=session.user;document.getElementById('auth-wrap').style.display='none';document.getElementById('app-wrap').style.display='block';document.getElementById('user-email').textContent=session.user.email;loadAll();loadDivisions();loadSettings();checkAdmin();}
   else{currentUser=null;document.getElementById('auth-wrap').style.display='flex';document.getElementById('app-wrap').style.display='none';}
 });
+
+function togglePass(inputId, btnId){
+  const input=document.getElementById(inputId);
+  const btn=document.getElementById(btnId);
+  if(input.type==='password'){input.type='text';btn.textContent='🙈';}
+  else{input.type='password';btn.textContent='👁️';}
+}
 
 function switchTab(t){document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(t==='login'&&i===0)||(t==='signup'&&i===1)));document.getElementById('login-form').style.display=t==='login'?'block':'none';document.getElementById('signup-form').style.display=t==='signup'?'block':'none';document.getElementById('auth-msg').className='auth-msg';}
 async function doLogin(){const e=document.getElementById('l-email').value.trim(),p=document.getElementById('l-pass').value;if(!e||!p)return showMsg('Enter email and password','error');const{error}=await sb.auth.signInWithPassword({email:e,password:p});if(error)showMsg('Wrong email or password!','error');}
