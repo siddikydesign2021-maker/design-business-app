@@ -457,7 +457,10 @@
 const SUPABASE_URL='https://gjhbpgqqdlzqmypjymtq.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdqaGJwZ3FxZGx6cW15cGp5bXRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY1ODk5MjgsImV4cCI6MjA5MjE2NTkyOH0.9xVg4xW2m0azXxXKRIoJrBRlup1fp3HMEyVm6z2cr40';
 const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let currentUser=null,clients=[],projects=[],tasks=[],invoices=[];
+let currentUser=null,clients=[],projects=[],tasks=[],invoices=[],allAccounts=[];
+
+// Performance: preload data faster
+let dataLoaded = false;
 
 sb.auth.onAuthStateChange((event,session)=>{
   if(session){currentUser=session.user;document.getElementById('auth-wrap').style.display='none';document.getElementById('app-wrap').style.display='block';document.getElementById('user-email').textContent=session.user.email;loadAll();loadDivisions();loadSettings();checkAdmin();}
@@ -513,7 +516,16 @@ function renderTasks(){const tb=document.getElementById('tasks-table');if(!tasks
 
 function renderInvoices(){const tb=document.getElementById('invoices-table');if(!invoices.length){tb.innerHTML='<tr><td colspan="7" class="empty">No invoices yet</td></tr>';return;}tb.innerHTML=invoices.map((inv,idx)=>{const cl=clients.find(c=>c.id===inv.client_id);const adv=Number(inv.advance||0);const tot=Number(inv.amount||0);const bal=Math.max(0,tot-adv);const badge=inv.status==='paid'?'badge-paid':adv>0?'badge-partial':'badge-unpaid';const label=inv.status==='paid'?'Paid':adv>0?'Partial':'Unpaid';const invNum=inv.inv_number||'INV-'+String(inv.inv_seq||idx+1).padStart(4,'0');return`<tr><td>${invNum}</td><td>${cl?cl.name:'-'}</td><td>৳${tot.toLocaleString()}</td><td style="color:var(--green)">৳${adv.toLocaleString()}</td><td style="color:var(--red);font-weight:500">৳${bal.toLocaleString()}</td><td><span class="badge ${badge}">${label}</span></td><td style="display:flex;gap:4px;flex-wrap:wrap"><button class="btn btn-success btn-sm" onclick="printInvoice('${inv.id}',${idx})">🖨️</button><button class="btn btn-primary btn-sm" onclick="editInvoice('${inv.id}')">✏️</button>${inv.status!=='paid'?`<button class="btn btn-primary btn-sm" onclick="markPaid('${inv.id}')">Paid</button>`:''}<button class="btn btn-danger btn-sm" onclick="deleteItem('invoices','${inv.id}')">✕</button></td></tr>`;}).join('');}
 
-function populateSelects(){const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');document.getElementById('p-client').innerHTML='<option value="">Select client</option>'+opts;document.getElementById('i-client').innerHTML='<option value="">Select client</option>'+opts;const popts=projects.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');document.getElementById('t-project').innerHTML='<option value="">Select project</option>'+popts;}
+function populateSelects(){
+  const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+  const pc=document.getElementById('p-client');
+  const ic=document.getElementById('i-client');
+  const eic=document.getElementById('edit-i-client');
+  if(pc)pc.innerHTML='<option value="">Select client</option>'+opts;
+  if(ic)ic.innerHTML='<option value="">Select client</option>'+opts;
+  if(eic)eic.innerHTML='<option value="">Select client</option>'+opts;
+  const popts=projects.map(p=>`<option value="${p.id}">${p.title}</option>`).join('');
+}
 
 function printInvoice(id,idx){
   const inv=invoices.find(i=>i.id===id);if(!inv)return;
@@ -572,9 +584,8 @@ function printInvoice(id,idx){
 async function addClient(){const name=document.getElementById('c-name').value.trim();if(!name)return alert('Enter name');await sb.from('clients').insert({user_id:currentUser.id,name,email:document.getElementById('c-email').value,phone:document.getElementById('c-phone').value,address:document.getElementById('c-address').value,notes:document.getElementById('c-notes').value});closeModal('client-modal');loadAll();}
 async function addProject(){const title=document.getElementById('p-title').value.trim(),client_id=document.getElementById('p-client').value;if(!title||!client_id)return alert('Enter name and client');await sb.from('projects').insert({user_id:currentUser.id,title,client_id,budget:document.getElementById('p-budget').value,deadline:document.getElementById('p-deadline').value});closeModal('project-modal');loadAll();}
 // ACCOUNTS
-let allAccounts=[];
-
 async function loadAccounts(){
+  if(!currentUser)return;
   if(!currentUser)return;
   const{data}=await sb.from('accounts').select('*').eq('user_id',currentUser.id).order('date',{ascending:false});
   allAccounts=data||[];
@@ -838,7 +849,13 @@ function copyAllEmails() {
   navigator.clipboard.writeText(ids).then(() => alert('Emails copied! (' + allUsersData.length + ' users)'));
 }
 
-function openModal(id){document.getElementById(id).classList.add('open');}
+function openModal(id){
+  document.getElementById(id).classList.add('open');
+  // Repopulate selects when opening invoice modal
+  if(id==='invoice-modal'||id==='project-modal'){
+    populateSelects();
+  }
+}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 </script>
 </body>
