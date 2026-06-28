@@ -851,10 +851,16 @@ function copyAllEmails() {
 
 function openModal(id){
   document.getElementById(id).classList.add('open');
-  // Repopulate selects when opening invoice modal
-  if(id==='invoice-modal'||id==='project-modal'){
-    populateSelects();
-  }
+  // Always repopulate selects
+  setTimeout(()=>{
+    const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
+    const ic=document.getElementById('i-client');
+    const pc=document.getElementById('p-client');
+    const eic=document.getElementById('edit-i-client');
+    if(ic&&ic.options.length<=1)ic.innerHTML='<option value="">Select client</option>'+opts;
+    if(pc&&pc.options.length<=1)pc.innerHTML='<option value="">Select client</option>'+opts;
+    if(eic)eic.innerHTML='<option value="">Select client</option>'+opts;
+  },50);
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 </script>
