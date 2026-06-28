@@ -497,8 +497,33 @@ function getBiz(){return JSON.parse(localStorage.getItem('biz_settings')||'{}');
 
 function addRow(){const tb=document.getElementById('inv-items-body');const tr=document.createElement('tr');tr.innerHTML=`<td><input placeholder="Description" oninput="calcInvTotal()"></td><td><input type="number" value="1" min="0" oninput="calcInvTotal()" style="text-align:center" placeholder="1"></td><td><input type="number" value="0" min="0" oninput="calcInvTotal()" placeholder="0"></td><td><input readonly style="color:var(--accent);font-weight:500;"></td><td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td>`;tb.appendChild(tr);}
 function removeRow(btn){const rows=document.querySelectorAll('#inv-items-body tr');if(rows.length>1){btn.closest('tr').remove();calcInvTotal();}}
-function calcInvTotal(){let t=0;document.querySelectorAll('#inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');const q=parseFloat(inp[1].value)||1,r=parseFloat(inp[2].value)||0,rt=q*r;inp[3].value=rt>=0?'৳ '+rt.toLocaleString():'';t+=rt;});document.getElementById('i-total').value='৳ '+t.toLocaleString();calcBalance();return t;}
-function calcBalance(){let t=0;document.querySelectorAll('#inv-items-body tr').forEach(tr=>{const inp=tr.querySelectorAll('input');t+=(parseFloat(inp[1].value)||1)*(parseFloat(inp[2].value)||0);});const adv=parseFloat(document.getElementById('i-advance').value)||0;document.getElementById('i-balance').value='৳ '+Math.max(0,t-adv).toLocaleString();}
+function calcInvTotal(){
+  let t=0;
+  document.querySelectorAll('#inv-items-body tr').forEach(tr=>{
+    const inp=tr.querySelectorAll('input');
+    if(inp.length<4)return;
+    const q=parseFloat(inp[1].value)||1;
+    const r=parseFloat(inp[2].value)||0;
+    const rt=q*r;
+    inp[3].value=rt>0?'৳ '+rt.toLocaleString():'৳ 0';
+    t+=rt;
+  });
+  const totalEl=document.getElementById('i-total');
+  if(totalEl)totalEl.value='৳ '+t.toLocaleString();
+  calcBalance();
+  return t;
+}
+function calcBalance(){
+  let t=0;
+  document.querySelectorAll('#inv-items-body tr').forEach(tr=>{
+    const inp=tr.querySelectorAll('input');
+    if(inp.length<4)return;
+    t+=(parseFloat(inp[1].value)||1)*(parseFloat(inp[2].value)||0);
+  });
+  const adv=parseFloat(document.getElementById('i-advance').value)||0;
+  const balEl=document.getElementById('i-balance');
+  if(balEl)balEl.value='৳ '+Math.max(0,t-adv).toLocaleString();
+}
 
 function calculate(){const inc=parseFloat(document.getElementById('total-income').value)||0,exp=parseFloat(document.getElementById('total-expense').value)||0,profit=inc-exp;const p1=parseFloat(document.getElementById('pct1').value)||0,p2=parseFloat(document.getElementById('pct2').value)||0,p3=parseFloat(document.getElementById('pct3').value)||0,tot=p1+p2+p3;document.getElementById('pct-total').textContent=tot;document.getElementById('pct-warning').style.display=tot!==100?'block':'none';document.getElementById('net-profit').textContent='৳ '+Math.round(profit).toLocaleString();document.getElementById('amt1').textContent='৳ '+Math.round(profit*p1/100).toLocaleString();document.getElementById('amt2').textContent='৳ '+Math.round(profit*p2/100).toLocaleString();document.getElementById('amt3').textContent='৳ '+Math.round(profit*p3/100).toLocaleString();}
 function saveDivisions(){localStorage.setItem('div_name1',document.getElementById('name1').value);localStorage.setItem('div_name2',document.getElementById('name2').value);localStorage.setItem('div_name3',document.getElementById('name3').value);}
@@ -851,16 +876,34 @@ function copyAllEmails() {
 
 function openModal(id){
   document.getElementById(id).classList.add('open');
-  // Always repopulate selects
   setTimeout(()=>{
+    // Always repopulate client selects fresh
     const opts=clients.map(c=>`<option value="${c.id}">${c.name}</option>`).join('');
     const ic=document.getElementById('i-client');
     const pc=document.getElementById('p-client');
     const eic=document.getElementById('edit-i-client');
-    if(ic&&ic.options.length<=1)ic.innerHTML='<option value="">Select client</option>'+opts;
-    if(pc&&pc.options.length<=1)pc.innerHTML='<option value="">Select client</option>'+opts;
-    if(eic)eic.innerHTML='<option value="">Select client</option>'+opts;
-  },50);
+    if(ic) ic.innerHTML='<option value="">Select client</option>'+opts;
+    if(pc) pc.innerHTML='<option value="">Select client</option>'+opts;
+    if(eic) eic.innerHTML='<option value="">Select client</option>'+opts;
+    // Set today as default date for invoice
+    if(id==='invoice-modal'){
+      const today=new Date().toISOString().split('T')[0];
+      const dueEl=document.getElementById('i-due');
+      if(dueEl&&!dueEl.value) dueEl.value=today;
+      // Reset items
+      document.getElementById('inv-items-body').innerHTML=`<tr>
+        <td><input placeholder="বিবরণ লিখুন" oninput="calcInvTotal()" style="width:100%;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--text);outline:none;"></td>
+        <td><input type="number" value="1" min="0" oninput="calcInvTotal()" style="width:100%;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--text);outline:none;text-align:center;"></td>
+        <td><input type="number" value="0" min="0" oninput="calcInvTotal()" style="width:100%;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--text);outline:none;"></td>
+        <td><input readonly style="width:100%;padding:7px 8px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;font-size:12px;color:var(--accent);font-weight:500;outline:none;"></td>
+        <td><button onclick="removeRow(this)" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;">✕</button></td>
+      </tr>`;
+      document.getElementById('i-total').value='';
+      document.getElementById('i-advance').value='0';
+      document.getElementById('i-balance').value='';
+      document.getElementById('i-note').value='';
+    }
+  },100);
 }
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 </script>
